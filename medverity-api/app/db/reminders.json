@@ -1,0 +1,38 @@
+{
+  "morning": [
+    {
+      "id": "rem-ee506049",
+      "medicine_name": "Paracetamol 650mg",
+      "time": "08:00",
+      "instructions": "Take 1 tablet after breakfast with water",
+      "status": "taken",
+      "timeOfDay": "morning",
+      "channel": "app",
+      "phone": ""
+    }
+  ],
+  "afternoon": [
+    {
+      "id": "rem-b05f0f60",
+      "medicine_name": "Metformin 500mg",
+      "time": "13:00",
+      "instructions": "Take with lunch, avoid alcohol",
+      "status": "taken",
+      "timeOfDay": "afternoon",
+      "channel": "app",
+      "phone": ""
+    }
+  ],
+  "night": [
+    {
+      "id": "rem-4cd3cd3a",
+      "medicine_name": "Atorvastatin 10mg",
+      "time": "21:30",
+      "instructions": "Take after dinner before sleep",
+      "status": "pending",
+      "timeOfDay": "night",
+      "channel": "app",
+      "phone": ""
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+[
+  {
+    "id": "sms-bacb4e22",
+    "to": "+919391843586",
+    "medicine_name": "Dolo 650mg",
+    "time": "10:08",
+    "body": "\ud83d\udc8a MedVerity Reminder\nTime to take: Dolo 650mg\nScheduled: 10:08\nInstructions: Take after food\nStay healthy! \u2014 MedVerity",
+    "timestamp": "2026-10-05 22:14:03",
+    "status": "failed_trial_expired",
+    "note": "Failed: Twilio Trial account has expired (Error 20003). Upgrade or renew account to send physical SMS.",
+    "sid": null,
+    "error_code": 20003,
+    "error_message": "Unable to create record: Your Trial account has expired. Please upgrade your account to gain access."
+  },
+  {
+    "id": "sms-78b62fce",
+    "to": "+919391843586",
+    "medicine_name": "Paracetamol 650mg",
+    "time": "Now (Test)",
+    "body": "\ud83d\udc8a MedVerity Reminder\nTime to take: Paracetamol 650mg\nScheduled: Now (Test)\nInstructions: Take 1 tablet with water. This is a test reminder from MedVerity.\nStay healthy! \u2014 MedVerity",
+    "timestamp": "2026-10-05 22:08:26",
+    "status": "dispatched_simulated",
+    "note": "Simulated dispatch (Twilio note: \n\u001b[31m\u001b[49mHTTP Error\u001b[0m \u001b[37m\u001b[49mYour request was:\u001b[0m\n\n\u001b[36m\u001b[49mPOST /Accounts/SKfbb3)",
+    "sid": null
+  },
+  {
+    "id": "sms-42e811d5",
+    "to": "+919391843586",
+    "medicine_name": "dolo",
+    "time": "10:08",
+    "body": "\ud83d\udc8a MedVerity Reminder\nTime to take: dolo\nScheduled: 10:08\nInstructions: tab\nStay healthy! \u2014 MedVerity",
+    "timestamp": "2026-10-05 22:07:27",
+    "status": "dispatched_simulated",
+    "note": "Simulated dispatch (Twilio note: \n\u001b[31m\u001b[49mHTTP Error\u001b[0m \u001b[37m\u001b[49mYour request was:\u001b[0m\n\n\u001b[36m\u001b[49mPOST /Accounts/SKfbb3)",
+    "sid": null
+  },
+  {
+    "id": "sms-40c7b37e",
+    "to": "+919876543210",
+    "medicine_name": "Paracetamol 650mg",
+    "time": "Now (Test)",
+    "body": "\ud83d\udc8a MedVerity Reminder\nTime to take: Paracetamol 650mg\nScheduled: Now (Test)\nInstructions: Take 1 tablet with water. This is a test reminder from MedVerity.\nStay healthy! \u2014 MedVerity",
+    "timestamp": "2026-10-05 22:06:18",
+    "status": "dispatched_simulated",
+    "note": "Simulated dispatch (Twilio note: \n\u001b[31m\u001b[49mHTTP Error\u001b[0m \u001b[37m\u001b[49mYour request was:\u001b[0m\n\n\u001b[36m\u001b[49mPOST /Accounts/SKfbb3)",
+    "sid": null
+  },
+  {
+    "id": "sms-66a24b6d",
+    "to": "+919876543210",
+    "medicine_name": "Paracetamol 650mg",
+    "time": "Now (Test)",
+    "body": "\ud83d\udc8a MedVerity Reminder\nTime to take: Paracetamol 650mg\nScheduled: Now (Test)\nInstructions: Take 1 tablet with water. This is a test reminder from MedVerity.\nStay healthy! \u2014 MedVerity",
+    "timestamp": "2026-10-05 22:06:17",
+    "status": "dispatched_simulated",
+    "note": "Simulated dispatch (Twilio note: \n\u001b[31m\u001b[49mHTTP Error\u001b[0m \u001b[37m\u001b[49mYour request was:\u001b[0m\n\n\u001b[36m\u001b[49mPOST /Accounts/SKfbb3)",
+    "sid": null
+  },
+  {
+    "id": "sms-fd69fa1e",
+    "to": "+919876543210",
+    "medicine_name": "Dolo 650mg",
+    "time": "08:00",
+    "body": "\ud83d\udc8a MedVerity Reminder\nTime to take: Dolo 650mg\nScheduled: 08:00\nStay healthy! \u2014 MedVerity",
+    "timestamp": "2026-10-05 22:03:40",
+    "status": "dispatched_simulated",
+    "note": "Simulated dispatch (Twilio note: \n\u001b[31m\u001b[49mHTTP Error\u001b[0m \u001b[37m\u001b[49mYour request was:\u001b[0m\n\n\u001b[36m\u001b[49mPOST /Accounts/SKfbb3)",
+    "sid": null
+  },
+  {
+    "id": "sms-1c71d612",
+    "to": "+919876543210",
+    "medicine_name": "Pantoprazole 40mg",
+    "time": "08:00",
+    "body": "\ud83d\udc8a MedVerity Reminder\nTime to take: Pantoprazole 40mg\nScheduled: 08:00\nInstructions: Before breakfast with warm water\nStay healthy! \u2014 MedVerity",
+    "timestamp": "2026-10-05 21:51:21",
+    "status": "dispatched_simulated",
+    "note": "Simulated dispatch (Twilio note: \n\u001b[31m\u001b[49mHTTP Error\u001b[0m \u001b[37m\u001b[49mYour request was:\u001b[0m\n\n\u001b[36m\u001b[49mPOST /Accounts/SKfbb3)",
+    "sid": null
+  }
+]

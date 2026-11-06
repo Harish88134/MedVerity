@@ -1,0 +1,704 @@
+{
+  "drug_rules": {
+    "paracetamol": {
+      "generic_names": ["paracetamol", "acetaminophen"],
+      "brand_names": ["dolo", "dolo 650", "calpol", "crocin", "p-650", "pacimol", "tylenol"],
+      "food_rule": {
+        "type": "flexible",
+        "title": {
+          "en": "With or Without Food",
+          "te": "ఆహారంతో లేదా ఖాళీ కడుపుతో",
+          "hi": "खाने के साथ या बिना खाने के",
+          "ta": "உணவுடனோ அல்லது உணவில்லாமலோ"
+        },
+        "description": {
+          "en": "Paracetamol is gentle on the stomach and can be taken before or after meals with a glass of water.",
+          "te": "పారాసిటమాల్ కడుపుకు సున్నితంగా ఉంటుంది, భోజనానికి ముందు లేదా తర్వాత ఒక గ్లాసు నీటితో తీసుకోవచ్చు.",
+          "hi": "पैरासिटामोल पेट के लिए सुरक्षित है और इसे खाने से पहले या बाद में पानी के साथ लिया जा सकता है।",
+          "ta": "பாராசிட்டமால் வயிற்றுக்கு மென்மையானது, உணவுக்கு முன் அல்லது பின் தண்ணீருடன் உட்கொள்ளலாம்."
+        }
+      },
+      "conflicts": [
+        {
+          "id": "alcohol_paracetamol",
+          "category": "alcohol",
+          "severity": "danger",
+          "icon": "🍷",
+          "title": {
+            "en": "Alcohol Toxicity Warning",
+            "te": "ఆల్కహాల్ విషపూరిత హెచ్చరిక",
+            "hi": "शराब विषाक्तता चेतावनी",
+            "ta": "மது நச்சுத்தன்மை எச்சரிக்கை"
+          },
+          "description": {
+            "en": "Combining alcohol with paracetamol significantly multiplies the production of toxic NAPQI metabolites, causing acute liver damage.",
+            "te": "పారాసిటమాల్‌ను ఆల్కహాల్‌తో కలిపి తీసుకోవడం వల్ల కాలేయానికి తీవ్రమైన నష్టం కలిగించే విషపూరిత పదార్థాలు ఉత్పత్తి అవుతాయి.",
+            "hi": "पैरासिटामोल के साथ शराब पीने से लीवर को गंभीर नुकसान पहुंच सकता है।",
+            "ta": "பாராசிட்டமாலுடன் மது அருந்துவது கல்லீரலுக்கு கடுமையான பாதிப்பை ஏற்படுத்தும்."
+          },
+          "action_advice": {
+            "en": "Avoid alcohol completely while taking paracetamol.",
+            "te": "పారాసిటమాల్ తీసుకుంటున్నప్పుడు ఆల్కహాల్ పూర్తిగా మానేయండి.",
+            "hi": "पैरासिटामोल लेते समय शराब का सेवन बिल्कुल न करें।",
+            "ta": "பாராசிட்டமால் உட்கொள்ளும்போது மதுவை முற்றிலுமாக தவிர்க்கவும்."
+          },
+          "time_separation": "Strictly Avoid"
+        }
+      ],
+      "chronotherapy": {
+        "recommended_slot": "as_needed",
+        "recommended_time": "Every 4-6 Hours",
+        "clock_icon": "⏰",
+        "efficacy_boost": {
+          "en": "Sustained Pain & Fever Relief",
+          "te": "నిరంతర జ్వరం మరియు నొప్పి నివారణ",
+          "hi": "लगातार बुखार और दर्द से राहत",
+          "ta": "தொடர்ச்சியான காய்ச்சல் மற்றும் வலி நிவாரணம்"
+        },
+        "scientific_rationale": {
+          "en": "Do not exceed 4,000 mg (6 tablets) in 24 hours. Maintaining at least 4 to 6 hours between doses prevents toxic liver accumulation.",
+          "te": "24 గంటల్లో 4,000 మి.గ్రా మించకూడదు. డోసుల మధ్య 4-6 గంటల వ్యవధి ఉంచడం వల్ల కాలేయంపై భారం పడదు.",
+          "hi": "24 घंटे में 4000 मिलीग्राम से अधिक न लें। दो खुराकों के बीच 4 से 6 घंटे का अंतर रखें।",
+          "ta": "24 மணி நேரத்தில் 4,000 மி.கி தாண்டக்கூடாது. அளவுகளுக்கு இடையில் 4 முதல் 6 மணி நேர இடைவெளி விடவும்."
+        }
+      }
+    },
+
+    "pantoprazole": {
+      "generic_names": ["pantoprazole", "omeprazole", "rabeprazole", "esomeprazole"],
+      "brand_names": ["pan 40", "pan-d", "pantocid", "omez", "omez-d", "rabekind", "nexpro", "pantop"],
+      "food_rule": {
+        "type": "empty_stomach",
+        "title": {
+          "en": "Strictly on Empty Stomach",
+          "te": "ఖచ్చితంగా ఖాళీ కడుపుతో తీసుకోవాలి",
+          "hi": "सख्त रूप से खाली पेट लें",
+          "ta": "கண்டிப்பாக வெறும் வயிற்றில் உட்கொள்ளவும்"
+        },
+        "description": {
+          "en": "Must be taken 30 to 60 minutes BEFORE breakfast. Taking after food severely blocks its ability to deactivate acid pumps.",
+          "te": "ఉదయం అల్పాహారానికి 30 నుండి 60 నిమిషాల ముందు తీసుకోవాలి. ఆహారం తర్వాత తీసుకుంటే యాసిడ్ తగ్గించే శక్తి బాగా తగ్గుతుంది.",
+          "hi": "नाश्ते से 30 से 60 मिनट पहले लें। खाने के बाद लेने से इसका असर काफी कम हो जाता है।",
+          "ta": "காலை உணவுக்கு 30 முதல் 60 நிமிடங்களுக்கு முன் உட்கொள்ள வேண்டும். உணவுக்குப் பின் எடுத்தால் பலன் குறையும்."
+        }
+      },
+      "conflicts": [
+        {
+          "id": "caffeine_ppi",
+          "category": "caffeine",
+          "severity": "warning",
+          "icon": "☕",
+          "title": {
+            "en": "Coffee & Tea Acid Rebound",
+            "te": "కాఫీ మరియు టీ అసిడిటీ హెచ్చరిక",
+            "hi": "कॉफी और चाय से एसिडिटी का खतरा",
+            "ta": "காபி மற்றும் டீ அசிடிட்டி எச்சரிக்கை"
+          },
+          "description": {
+            "en": "Drinking coffee or strong tea immediately after your PPI triggers gastrin release, undermining the acid-suppressing benefit.",
+            "te": "ఈ మందు వేసుకున్న వెంటనే కాఫీ లేదా టీ తాగితే కడుపులో యాసిడ్ మళ్ళీ పెరిగి మందు ప్రభావం పోతుంది.",
+            "hi": "दवा लेने के तुरंत बाद कॉफी या तेज चाय पीने से एसिड फिर से बन सकता है।",
+            "ta": "மருந்து எடுத்த உடனே காபி அல்லது டீ குடித்தால் அமில சுரப்பு அதிகரித்து மருந்து வீரியம் குறையும்."
+          },
+          "action_advice": {
+            "en": "Wait at least 45 minutes after taking medication before morning tea or coffee.",
+            "te": "మందు తీసుకున్న తర్వాత కనీసం 45 నిమిషాల వరకు టీ లేదా కాఫీ తాగవద్దు.",
+            "hi": "दवा लेने के कम से कम 45 मिनट बाद ही चाय या कॉफी लें।",
+            "ta": "மருந்து உட்கொண்ட பிறகு குறைந்தது 45 நிமிடங்கள் கழித்து தேநீர் அல்லது காபி அருந்தவும்."
+          },
+          "time_separation": "Wait 45 mins"
+        }
+      ],
+      "chronotherapy": {
+        "recommended_slot": "morning_empty_stomach",
+        "recommended_time": "7:00 AM - 7:30 AM",
+        "clock_icon": "🌅",
+        "efficacy_boost": {
+          "en": "90% Higher Acid Pump Blockade",
+          "te": "90% గరిష్ట యాసిడ్ నియంత్రణ",
+          "hi": "90% बेहतर एसिड नियंत्रण",
+          "ta": "90% அதிக அமில கட்டுப்பாடு"
+        },
+        "scientific_rationale": {
+          "en": "Gastric proton pumps are synthesized in greatest numbers overnight and activated by the first meal. Taking PPI 30 mins before breakfast yields optimal 24-hour heartburn protection.",
+          "te": "రాత్రిపూట కొత్త యాసిడ్ పంపులు తయారవుతాయి. అల్పాహారానికి 30 నిమిషాల ముందు వేసుకుంటే రోజంతా గ్యాస్ మరియు మంట నుండి పూర్తి ఉపశమనం లభిస్తుంది.",
+          "hi": "रात में पेट में नए एसिड पंप बनते हैं जो सुबह भोजन से सक्रिय होते हैं। नाश्ते से 30 मिनट पहले लेने से 24 घंटे आराम मिलता है।",
+          "ta": "இரவில் உற்பத்தியாகும் அமில செல்களை காலை உணவுக்கு முன் கட்டுப்படுத்துவது நாள் முழுவதும் நெஞ்செரிச்சலை தடுக்கும்."
+        }
+      }
+    },
+
+    "atorvastatin": {
+      "generic_names": ["atorvastatin", "rosuvastatin", "simvastatin"],
+      "brand_names": ["lipitor", "atorva", "atorlip", "rosuvas", "rosave", "crestor", "tonact", "storvas"],
+      "food_rule": {
+        "type": "flexible",
+        "title": {
+          "en": "Take with or without food",
+          "te": "ఆహారంతో లేదా ఆహారం లేకుండా",
+          "hi": "भोजन के साथ या बिना भोजन के",
+          "ta": "உணவுடனோ அல்லது உணவில்லாமலோ"
+        },
+        "description": {
+          "en": "Can be taken regardless of meals, but must be taken at the same time every day.",
+          "te": "ఆహారంతో సంబంధం లేకుండా తీసుకోవచ్చు, కానీ ప్రతిరోజూ ఒకే సమయానికి తీసుకోవాలి.",
+          "hi": "खाने के साथ या बिना खाने के ले सकते हैं, लेकिन रोजाना एक ही समय पर लें।",
+          "ta": "உணவுடன் அல்லது உணவின்றி உட்கொள்ளலாம், ஆனால் தினமும் ஒரே நேரத்தில் எடுக்க வேண்டும்."
+        }
+      },
+      "conflicts": [
+        {
+          "id": "grapefruit_statin",
+          "category": "citrus",
+          "severity": "danger",
+          "icon": "🍊",
+          "title": {
+            "en": "Grapefruit & Citrus CYP3A4 Block",
+            "te": "ద్రాక్ష పండ్లు మరియు సిట్రస్ ప్రమాద హెచ్చరిక",
+            "hi": "चकोतरा (ग्रेपफ्रूट) से गंभीर खतरा",
+            "ta": "திராட்சைப்பழம் மற்றும் சிட்ரஸ் எச்சரிக்கை"
+          },
+          "description": {
+            "en": "Grapefruit juice inhibits intestinal CYP3A4 enzymes, causing statin blood levels to spike up to 15-fold. This drastically increases the risk of severe muscle breakdown (rhabdomyolysis) and acute kidney injury.",
+            "te": "గ్రేప్‌ఫ్రూట్ (పంపరపనస) రసం శరీరంలో స్టాటిన్ ఔషధ స్థాయిని విపరీతంగా పెంచుతుంది. ఇది తీవ్రమైన కండరాల నొప్పులు మరియు మూత్రపిండాల వైఫల్యానికి దారితీయవచ్చు.",
+            "hi": "ग्रेपफ्रूट जूस शरीर में स्टेटिन दवा की मात्रा 15 गुना तक बढ़ा देता है, जिससे मांसपेशियों और किडनी को गंभीर नुकसान हो सकता है।",
+            "ta": "திராட்சைப்பழ சாறு இரத்தத்தில் ஸ்டேடின் அளவை அபாயகரமாக உயர்த்தி தசை சிதைவு மற்றும் சிறுநீரக பாதிப்பை உண்டாக்கும்."
+          },
+          "action_advice": {
+            "en": "Do not drink grapefruit juice or consume Seville oranges while on statin therapy.",
+            "te": "ఈ మందు వాడుతున్నప్పుడు గ్రేప్‌ఫ్రూట్ జ్యూస్ తాగవద్దు.",
+            "hi": "स्टेटिन लेते समय ग्रेपफ्रूट जूस बिल्कुल न पिएं।",
+            "ta": "ஸ்டேடின் உட்கொள்ளும்போது திராட்சைப்பழ சாறு அருந்துவதை தவிர்க்கவும்."
+          },
+          "time_separation": "Strictly Avoid"
+        },
+        {
+          "id": "alcohol_statin",
+          "category": "alcohol",
+          "severity": "warning",
+          "icon": "🍷",
+          "title": {
+            "en": "Alcohol Liver Strain",
+            "te": "ఆల్కహాల్ కాలేయ సమస్య హెచ్చరిక",
+            "hi": "शराब से लीवर पर दबाव",
+            "ta": "மதுவினால் கல்லீரல் பாதிப்பு"
+          },
+          "description": {
+            "en": "Daily alcohol intake combined with statins increases hepatic transaminase enzyme spikes and risks chronic liver inflammation.",
+            "te": "స్టాటిన్ మందులతో ఆల్కహాల్ తీసుకుంటే కాలేయంపై భారం పెరిగి కాలేయ సమస్యలు రావచ్చు.",
+            "hi": "स्टेटिन के साथ शराब का सेवन करने से लीवर पर अत्यधिक दबाव पड़ता है।",
+            "ta": "ஸ்டேடின் மருந்துகளுடன் மது அருந்துவது கல்லீரலுக்கு அழுத்தத்தை ஏற்படுத்தும்."
+          },
+          "action_advice": {
+            "en": "Limit alcohol consumption and undergo routine liver function checks.",
+            "te": "ఆల్కహాల్ తీసుకోవడం పూర్తిగా పరిమితం చేయండి.",
+            "hi": "शराब का सेवन सीमित करें।",
+            "ta": "மது அருந்துவதை கட்டுப்படுத்தவும்."
+          },
+          "time_separation": "Limit / Avoid"
+        }
+      ],
+      "chronotherapy": {
+        "recommended_slot": "bedtime",
+        "recommended_time": "9:30 PM - 10:00 PM",
+        "clock_icon": "🌙",
+        "efficacy_boost": {
+          "en": "+25% Greater LDL Cholesterol Reduction",
+          "te": "+25% అదనపు కొలెస్ట్రాల్ తగ్గింపు",
+          "hi": "+25% अधिक कोलेस्ट्रॉल में कमी",
+          "ta": "+25% அதிக கொழுப்பு குறைப்பு"
+        },
+        "scientific_rationale": {
+          "en": "Circadian physiology shows that the liver's HMG-CoA reductase enzyme produces over 70% of total cholesterol during nighttime sleep. Taking statins right before bed synchronizes peak drug levels with peak cholesterol synthesis for maximal clinical benefit.",
+          "te": "మనం నిద్రపోతున్నప్పుడు కాలేయంలో 70% కంటే ఎక్కువ కొలెస్ట్రాల్ ఉత్పత్తి అవుతుంది. రాత్రి పడుకునే ముందు ఈ మాత్ర వేసుకోవడం వల్ల కొలెస్ట్రాల్ 25% వేగంగా అదుపులోకి వస్తుంది.",
+          "hi": "रात में सोते समय लीवर 70% से अधिक कोलेस्ट्रॉल बनाता है। रात को सोने से पहले दवा लेने से यह सबसे प्रभावी तरीके से कोलेस्ट्रॉल घटाती है।",
+          "ta": "இரவு தூக்கத்தின் போது கல்லீரல் அதிக கொழுப்பை உருவாக்குகிறது. தூங்கும் முன் எடுப்பது மிகச்சிறந்த பலனை தரும்."
+        }
+      }
+    },
+
+    "doxycycline": {
+      "generic_names": ["doxycycline", "tetracycline", "minocycline"],
+      "brand_names": ["doxicip", "doxylin", "microdox", "minoz", "vibramycin"],
+      "food_rule": {
+        "type": "light_meal",
+        "title": {
+          "en": "Take with Light Food & Plenty of Water",
+          "te": "తేలికపాటి ఆహారంతో మరియు ఎక్కువ నీటితో",
+          "hi": "हल्के भोजन और भरपूर पानी के साथ",
+          "ta": "லேசான உணவு மற்றும் அதிக தண்ணீருடன்"
+        },
+        "description": {
+          "en": "Take with a light non-dairy snack and a full glass of water. Remain sitting or standing upright for at least 30 minutes to prevent pill-induced esophageal ulceration.",
+          "te": "పాల ఉత్పత్తులు లేని తేలికపాటి ఆహారంతో మరియు నిండు గ్లాసు నీటితో తీసుకోండి. మాత్ర గొంతులో అతుక్కోకుండా 30 నిమిషాలు కూర్చుని లేదా నిలబడి ఉండండి.",
+          "hi": "बिना दूध वाले हल्के भोजन और पूरे गिलास पानी के साथ लें। दवा लेने के बाद 30 मिनट तक सीधे बैठे या खड़े रहें।",
+          "ta": "பால் அல்லாத லேசான உணவு மற்றும் நிறைய தண்ணீருடன் உட்கொள்ளவும். 30 நிமிடங்கள் படுக்க வேண்டாம்."
+        }
+      },
+      "conflicts": [
+        {
+          "id": "dairy_chelation",
+          "category": "dairy",
+          "severity": "danger",
+          "icon": "🥛",
+          "title": {
+            "en": "Milk & Dairy Chelation Block",
+            "te": "పాలు మరియు పాల ఉత్పత్తుల నిరోధం",
+            "hi": "दूध व डेयरी उत्पादों से दवा का असर खत्म",
+            "ta": "பால் மற்றும் பால் பொருட்கள் எதிர்ப்பு"
+          },
+          "description": {
+            "en": "Calcium in milk, curd, cheese, and paneer strongly chelates doxycycline into an insoluble complex in your gut, decreasing antibiotic absorption by up to 80% and causing treatment failure.",
+            "te": "పాలు, పెరుగు, పన్నీర్ లో ఉండే కాల్షియం ఈ యాంటీబయాటిక్ తో కలిసిపోవడం వల్ల శరీరంలోకి మందు శోషణ 80% తగ్గిపోతుంది, దీనివల్ల ఇన్ఫెక్షన్ తగ్గదు.",
+            "hi": "दूध, दही और पनीर में मौजूद कैल्शियम दवा को पेट में बांध लेता है, जिससे दवा का असर 80% तक कम हो जाता है।",
+            "ta": "பால், தயிர், பன்னீரில் உள்ள கால்சியம் மருந்தின் உறிஞ்சுதலை 80% வரை தடுத்து நோய் குணமாவதை தாமதப்படுத்தும்."
+          },
+          "action_advice": {
+            "en": "Do not consume milk, yogurt, or calcium supplements within 2 hours before or 4 hours after taking this medicine.",
+            "te": "ఈ మందు తీసుకునే 2 గంటల ముందు మరియు 4 గంటల తర్వాత పాలు, పెరుగు లేదా కాల్షియం పదార్థాలు తీసుకోవద్దు.",
+            "hi": "दवा लेने से 2 घंटे पहले और 4 घंटे बाद तक दूध या डेयरी उत्पादों से बचें।",
+            "ta": "மருந்து எடுப்பதற்கு 2 மணி நேரத்திற்கு முன்பும் 4 மணி நேரத்திற்கு பின்பும் பால் பொருட்கள் உட்கொள்ள வேண்டாம்."
+          },
+          "time_separation": "Separate by 2-4 hrs"
+        },
+        {
+          "id": "sunlight_photosensitivity",
+          "category": "sunlight",
+          "severity": "danger",
+          "icon": "☀️",
+          "title": {
+            "en": "Severe Sunlight Photosensitivity",
+            "te": "తీవ్రమైన సూర్యరశ్మి అలెర్జీ హెచ్చరిక",
+            "hi": "धूप से गंभीर त्वचा संवेदनशीलता (सनबर्न)",
+            "ta": "சூரிய ஒளி ஒவ்வாமை எச்சரிக்கை"
+          },
+          "description": {
+            "en": "Doxycycline makes your skin hyper-sensitive to ultraviolet rays. Brief exposure to morning or midday sunlight can trigger blistering sunburns, phototoxic rashes, and skin peeling.",
+            "te": "ఈ మందు చర్మాన్ని ఎండకు అతి సున్నితంగా చేస్తుంది. కాసేపు ఎండలో తిరిగినా చర్మం కమిలిపోయి బొబ్బలు రావచ్చు.",
+            "hi": "यह दवा आपकी त्वचा को धूप के प्रति अत्यधिक संवेदनशील बनाती है। थोड़ी सी धूप से भी गंभीर सनबर्न या छाले पड़ सकते हैं।",
+            "ta": "இந்த மருந்து சருமத்தை சூரிய ஒளிக்கு மிக மென்மையானதாக்கும். சிறிய வெயிலும் கடுமையான கொப்புளங்களை ஏற்படுத்தலாம்."
+          },
+          "action_advice": {
+            "en": "Avoid direct sunlight. Apply broad-spectrum SPF 50+ sunscreen and wear full sleeves and sunglasses outdoors.",
+            "te": "నేరుగా ఎండలోకి వెళ్లవద్దు. బయటకు వెళ్ళేటప్పుడు SPF 50+ సన్‌స్క్రీన్ రాసుకోండి మరియు పూర్తి దుస్తులు ధరించండి.",
+            "hi": "सीधी धूप से बचें। बाहर निकलते समय SPF 50+ सनस्क्रीन लगाएं और पूरे कपड़े पहनें।",
+            "ta": "நேரடி வெயிலைத் தவிர்க்கவும். வெளியே செல்லும்போது SPF 50+ சன்ஸ்கிரீன் பூசி முழுக்கை ஆடை அணியவும்."
+          },
+          "time_separation": "Sun Protection Mandatory"
+        }
+      ],
+      "chronotherapy": {
+        "recommended_slot": "morning_with_food",
+        "recommended_time": "9:00 AM & 9:00 PM (Every 12 hrs)",
+        "clock_icon": "⏰",
+        "efficacy_boost": {
+          "en": "Steady Bacteriostatic Blood Levels",
+          "te": "స్థిరమైన యాంటీబయాటిక్ రక్త స్థాయిలు",
+          "hi": "स्थिर एंटीबायोटिक प्रभाव",
+          "ta": "சீரான பாக்டீரியா எதிர்ப்பு திறன்"
+        },
+        "scientific_rationale": {
+          "en": "Even 12-hour spacing prevents antibiotic concentration dips while daytime dosing minimizes bedtime reflux and esophageal erosion.",
+          "te": "ప్రతి 12 గంటలకు ఖచ్చితంగా తీసుకోవడం వల్ల ఇన్ఫెక్షన్ త్వరగా నయమవుతుంది మరియు నిద్రపోయే ముందు కాకుండా పగటిపూట తీసుకోవడం వల్ల గొంతు మంట రాదు.",
+          "hi": "हर 12 घंटे के सटीक अंतराल पर लें ताकि संक्रमण तेजी से ठीक हो और रात को सोते समय सीने में जलन न हो।",
+          "ta": "ஒவ்வொரு 12 மணி நேர இடைவெளியிலும் எடுப்பது தொற்றை விரைவாக கட்டுப்படுத்தும்."
+        }
+      }
+    },
+
+    "telmisartan": {
+      "generic_names": ["telmisartan", "losartan", "ramipril", "enalapril"],
+      "brand_names": ["telma", "telmikind", "micardis", "telsartan", "cardace", "losar"],
+      "food_rule": {
+        "type": "flexible",
+        "title": {
+          "en": "With or Without Food",
+          "te": "ఆహారంతో లేదా లేకుండా",
+          "hi": "भोजन के साथ या बिना भोजन के",
+          "ta": "உணவுடனோ அல்லது இல்லாமலோ"
+        },
+        "description": {
+          "en": "Can be taken with or without food. Take at the same time daily.",
+          "te": "భోజనంతో సంబంధం లేకుండా తీసుకోవచ్చు. ప్రతిరోజూ ఒకే సమయానికి తీసుకోండి.",
+          "hi": "भोजन के साथ या बिना भोजन के ले सकते हैं। रोजाना एक निश्चित समय पर लें।",
+          "ta": "உணவுடன் அல்லது உணவின்றி எடுக்கலாம். தினமும் குறிப்பிட்ட நேரத்தில் எடுக்கவும்."
+        }
+      },
+      "conflicts": [
+        {
+          "id": "potassium_telmisartan",
+          "category": "potassium",
+          "severity": "warning",
+          "icon": "🥬",
+          "title": {
+            "en": "High Potassium & Coconut Water Advisory",
+            "te": "పొటాషియం మరియు కొబ్బరి నీళ్ల హెచ్చరిక",
+            "hi": "पोटेशियम और नारियल पानी से सावधानी",
+            "ta": "பொட்டாசியம் மற்றும் இளநீர் எச்சரிக்கை"
+          },
+          "description": {
+            "en": "Telmisartan reduces aldosterone secretion, sparing potassium in the kidneys. High-potassium foods (excessive tender coconut water, potassium salt substitutes, bananas) can cause hyperkalemia, triggering heart palpitations.",
+            "te": "టెల్మిసార్టన్ మూత్రపిండాలలో పొటాషియం స్థాయిలను పెంచుతుంది. అధికంగా కొబ్బరి నీళ్లు లేదా అరటిపండ్లు తీసుకుంటే గుండె లయ తప్పే ప్రమాదం ఉంది.",
+            "hi": "यह दवा शरीर में पोटेशियम बचाती है। अत्यधिक नारियल पानी या पोटेशियम युक्त खाद्य पदार्थ दिल की धड़कन में असंतुलन पैदा कर सकते हैं।",
+            "ta": "இந்த மருந்து பொட்டாசியத்தை உடலில் தக்கவைக்கும். அதிக இளநீர் அல்லது பொட்டாசியம் உணவுகள் இதய துடிப்பில் மாறுபாட்டை ஏற்படுத்தலாம்."
+          },
+          "action_advice": {
+            "en": "Do not consume large amounts of coconut water or take potassium supplements without consulting your cardiologist.",
+            "te": "వైద్యుడిని సంప్రదించకుండా ఎక్కువ కొబ్బరి నీళ్లు లేదా పొటాషియం మందులు తీసుకోవద్దు.",
+            "hi": "डॉक्टर की सलाह के बिना अत्यधिक नारियल पानी या पोटेशियम सप्लीमेंट न लें।",
+            "ta": "மருத்துவர் ஆலோசனை இல்லாமல் அதிக இளநீர் குடிப்பதை தவிர்க்கவும்."
+          },
+          "time_separation": "Moderate Potassium Intake"
+        },
+        {
+          "id": "alcohol_bp",
+          "category": "alcohol",
+          "severity": "warning",
+          "icon": "🍷",
+          "title": {
+            "en": "Alcohol Postural Dizziness",
+            "te": "ఆల్కహాల్ మరియు తలతిరుగుడు హెచ్చరిక",
+            "hi": "शराब और चक्कर आने का खतरा",
+            "ta": "மது மற்றும் தலைசுற்றல் எச்சரிக்கை"
+          },
+          "description": {
+            "en": "Alcohol compounds peripheral vasodilation, precipitating sudden drops in standing blood pressure (orthostatic hypotension), dizziness, and fainting.",
+            "te": "ఆల్కహాల్ రక్తపోటును అకస్మాత్తుగా తగ్గించి తీవ్రమైన తలతిరుగుడు మరియు కళ్ళు తిరిగి పడిపోయే ప్రమాదాన్ని పెంచుతుంది.",
+            "hi": "शराब से ब्लड प्रेशर अचानक बहुत कम हो सकता है, जिससे चक्कर आना और बेहोशी का खतरा रहता है।",
+            "ta": "மது இரத்த அழுத்தத்தை திடீரென குறைத்து மயக்கம் மற்றும் தலைசுற்றலை உண்டாக்கும்."
+          },
+          "action_advice": {
+            "en": "Avoid alcohol, especially when initiating therapy or standing up quickly.",
+            "te": "మందు ప్రారంభించినప్పుడు ఆల్కహాల్‌కు దూరంగా ఉండండి.",
+            "hi": "शराब से बचें और अचानक तेजी से खड़े न हों।",
+            "ta": "மது அருந்துவதை தவிர்க்கவும்."
+          },
+          "time_separation": "Avoid Alcohol"
+        }
+      ],
+      "chronotherapy": {
+        "recommended_slot": "bedtime",
+        "recommended_time": "10:00 PM (Bedtime)",
+        "clock_icon": "🌙",
+        "efficacy_boost": {
+          "en": "45% Reduction in Morning Heart Attack & Stroke Risk",
+          "te": "ఉదయపు గుండెపోటు మరియు పక్షవాతం ప్రమాదం 45% తగ్గుతుంది",
+          "hi": "सुबह के हार्ट अटैक और स्ट्रोक के खतरे में 45% की कमी",
+          "ta": "காலை மாரடைப்பு மற்றும் பக்கவாத அபாயம் 45% குறைகிறது"
+        },
+        "scientific_rationale": {
+          "en": "The landmark Hygia Chronotherapy Trial revealed that taking BP medication at bedtime restores the natural healthy nocturnal blood pressure dip and provides dramatically superior protection against morning cardiovascular surges.",
+          "te": "రాత్రి పడుకునే ముందు రక్తపోటు మాత్ర వేసుకోవడం వల్ల రాత్రిపూట బీపీ అదుపులో ఉంటుంది మరియు తెల్లవారుజామున వచ్చే గుండెపోటు, పక్షవాతాల ముప్పు 45% తగ్గుతుంది.",
+          "hi": "रात को सोने से पहले बीपी की दवा लेने से सुबह होने वाले हार्ट अटैक और स्ट्रोक का खतरा 45% तक कम हो जाता है।",
+          "ta": "இரவு தூங்கும் முன் இரத்த அழுத்த மருந்து உட்கொள்வது அதிகாலை மாரடைப்பு அபாயத்தை 45% குறைக்கிறது."
+        }
+      }
+    },
+
+    "iron": {
+      "generic_names": ["ferrous ascorbate", "ferrous sulfate", "ferrous fumarate", "iron"],
+      "brand_names": ["autrin", "orofer", "fefol", "dexorange", "livogen", "chericof", "ferium"],
+      "food_rule": {
+        "type": "empty_stomach_preferred",
+        "title": {
+          "en": "Best on Empty Stomach or with Citrus",
+          "te": "ఖాళీ కడుపుతో లేదా సిట్రస్ పండ్లతో శ్రేష్టం",
+          "hi": "खाली पेट या नींबू/संतरे के साथ उत्तम",
+          "ta": "வெறும் வயிற்றில் அல்லது சிட்ரஸ் பழங்களுடன் சிறந்தது"
+        },
+        "description": {
+          "en": "Iron absorbs best on an empty stomach with a glass of water or vitamin C juice. If stomach upset occurs, take with non-dairy food.",
+          "te": "ఐరన్ ఖాళీ కడుపుతో లేదా విటమిన్ సి ఉన్న పండ్ల రసంతో తీసుకుంటే శరీరానికి బాగా పడుతుంది.",
+          "hi": "आयरन खाली पेट या विटामिन सी (नींबू पानी/संतरा) के साथ सबसे अच्छा अवशोषित होता है।",
+          "ta": "இரும்புச்சத்து வெறும் வயிற்றில் அல்லது எலுமிச்சை சாறுடன் உட்கொண்டால் நன்கு உறிஞ்சப்படும்."
+        }
+      },
+      "conflicts": [
+        {
+          "id": "tannins_tea_iron",
+          "category": "caffeine",
+          "severity": "danger",
+          "icon": "☕",
+          "title": {
+            "en": "Tea & Coffee Tannin Block (60-70% Loss)",
+            "te": "టీ మరియు కాఫీతో ఐరన్ నష్టం (60-70%)",
+            "hi": "चाय और कॉफी से आयरन का 60-70% नुकसान",
+            "ta": "தேநீர் மற்றும் காபியினால் இரும்புச்சத்து இழப்பு"
+          },
+          "description": {
+            "en": "Tannins and polyphenols in chai and coffee bind tightly with non-heme iron in the intestinal tract, destroying up to 70% of iron absorption and keeping hemoglobin low.",
+            "te": "టీ మరియు కాఫీలో ఉండే టానిన్లు ఐరన్‌ను అడ్డుకుంటాయి. దీనివల్ల రక్తంలో హిమోగ్లోబిన్ పెరగదు మరియు 70% ఐరన్ వృధా అవుతుంది.",
+            "hi": "चाय और कॉफी में मौजूद टैनिन आयरन को सोखने से रोकते हैं, जिससे हीमोग्लोबिन नहीं बढ़ पाता।",
+            "ta": "தேநீர் மற்றும் காபியில் உள்ள டானின் இரும்புச்சத்து உறிஞ்சுதலை 70% வரை தடுத்து இரத்த சோகையை நீடிக்க வைக்கும்."
+          },
+          "action_advice": {
+            "en": "Do not drink tea or coffee for at least 2 hours before or after taking iron.",
+            "te": "ఐరన్ టాబ్లెట్ వేసుకునే 2 గంటల ముందు మరియు తర్వాత టీ లేదా కాఫీ తాగవద్దు.",
+            "hi": "आयरन की गोली लेने के 2 घंटे पहले और बाद तक चाय या कॉफी न पिएं।",
+            "ta": "இரும்பு மாத்திரை எடுப்பதற்கு 2 மணி நேரத்திற்கு முன்பும் பின்பும் தேநீர், காபி அருந்த வேண்டாம்."
+          },
+          "time_separation": "Wait 2 Hours"
+        },
+        {
+          "id": "dairy_iron",
+          "category": "dairy",
+          "severity": "warning",
+          "icon": "🥛",
+          "title": {
+            "en": "Dairy Calcium Transport Conflict",
+            "te": "పాల ఉత్పత్తుల కాల్షియం పోటీ",
+            "hi": "दूध व कैल्शियम से आयरन में रुकावट",
+            "ta": "பால் கால்சியம் முரண்பாடு"
+          },
+          "description": {
+            "en": "Calcium competes for the same DMT-1 intestinal absorption pathways as iron, cutting absorption in half.",
+            "te": "పాలలో ఉండే కాల్షియం ఐరన్‌తో పోటీ పడటం వల్ల ఐరన్ శరీరానికి అందదు.",
+            "hi": "दूध में मौजूद कैल्शियम आयरन के अवशोषण को आधा कर देता है।",
+            "ta": "பாலில் உள்ள கால்சியம் இரும்புச்சத்து உடலுக்கு கிடைப்பதை பாதியாக குறைக்கும்."
+          },
+          "action_advice": {
+            "en": "Separate milk and curd intake by at least 2 hours from iron supplements.",
+            "te": "పాలు మరియు పెరుగును ఐరన్ మందుకు 2 గంటల దూరంలో ఉంచండి.",
+            "hi": "दूध और दही को आयरन की दवा से 2 घंटे अलग रखें।",
+            "ta": "பால் மற்றும் தயிரை இரும்பு மாத்திரையிலிருந்து 2 மணி நேரம் தள்ளி உட்கொள்ளவும்."
+          },
+          "time_separation": "Wait 2 Hours"
+        }
+      ],
+      "chronotherapy": {
+        "recommended_slot": "morning_empty_stomach",
+        "recommended_time": "8:00 AM (Alternate Days)",
+        "clock_icon": "🌅",
+        "efficacy_boost": {
+          "en": "40% Higher Hepcidin-Optimized Absorption",
+          "te": "40% మెరుగైన రక్తవృద్ధి",
+          "hi": "40% बेहतर अवशोषण और खून में वृद्धि",
+          "ta": "40% அதிக இரத்த அணுக்கள் உற்பத்தி"
+        },
+        "scientific_rationale": {
+          "en": "Morning administration coincides with lowest baseline hepcidin levels. Taking iron on an empty stomach with a slice of lemon or orange provides highest fractional absorption.",
+          "te": "ఉదయం వేళ శరీరంలో హెప్సిడిన్ తక్కువగా ఉంటుంది. నిమ్మరసం లేదా విటమిన్ సి నీటితో ఉదయం తీసుకుంటే రక్తహీనత త్వరగా తగ్గుతుంది.",
+          "hi": "सुबह के समय आयरन का अवशोषण सबसे तेज होता है। नींबू पानी के साथ लेने से हीमोग्लोबिन तेजी से बढ़ता है।",
+          "ta": "காலை வேளையில் எலுமிச்சை சாற்றுடன் எடுப்பது இரத்த சோகையை விரைவில் போக்கும்."
+        }
+      }
+    },
+
+    "metformin": {
+      "generic_names": ["metformin"],
+      "brand_names": ["glycomet", "glucophage", "gluconorm", "janumet", "galvus met", "obimet"],
+      "food_rule": {
+        "type": "with_food",
+        "title": {
+          "en": "Strictly With or After Meals",
+          "te": "ఖచ్చితంగా భోజనంతో లేదా భోజనం తర్వాత",
+          "hi": "भोजन के साथ या तुरंत बाद लें",
+          "ta": "கண்டிப்பாக உணவுடன் அல்லது உணவுக்குப் பின்"
+        },
+        "description": {
+          "en": "Always take with food or immediately after finishing your meal to prevent severe nausea, stomach cramping, and diarrhea.",
+          "te": "కడుపు నొప్పి, వికారం, విరేచనాలు రాకుండా ఉండటానికి ఖచ్చితంగా భోజనం చేస్తూ లేదా తిన్న వెంటనే తీసుకోవాలి.",
+          "hi": "पेट दर्द, मतली और दस्त से बचने के लिए इसे हमेशा खाने के साथ या खाने के तुरंत बाद लें।",
+          "ta": "வயிற்று வலி, குமட்டலை தவிர்க்க இதை எப்போதும் உணவுடன் அல்லது சாப்பிட்ட உடனே எடுக்க வேண்டும்."
+        }
+      },
+      "conflicts": [
+        {
+          "id": "alcohol_metformin",
+          "category": "alcohol",
+          "severity": "danger",
+          "icon": "🍷",
+          "title": {
+            "en": "Lactic Acidosis & Hypoglycemia Danger",
+            "te": "లాక్టిక్ అసిడోసిస్ మరియు లో-షుగర్ ప్రమాదం",
+            "hi": "लैक्टिक एसिडोसिस और लो शुगर का जानलेवा खतरा",
+            "ta": "லேக்டிக் அமிலத்தன்மை மற்றும் குறை இரத்த சர்க்கரை அபாயம்"
+          },
+          "description": {
+            "en": "Alcohol inhibits hepatic gluconeogenesis and lactate clearance, triggering life-threatening lactic acidosis and sudden nocturnal hypoglycemia.",
+            "te": "మెట్‌ఫార్మిన్‌తో ఆల్కహాల్ తీసుకుంటే ప్రాణాంతకమైన లాక్టిక్ అసిడోసిస్ మరియు చక్కెర స్థాయిలు అకస్మాత్తుగా పడిపోయే ప్రమాదం ఉంది.",
+            "hi": "शराब और मेटफॉर्मिन मिलकर शुगर का स्तर अचानक बहुत गिरा सकते हैं और यह जानलेवा हो सकता है।",
+            "ta": "மெட்ஃபோர்மினுடன் மது அருந்துவது உயிருக்கு ஆபத்தான அமிலத்தன்மையையும் சர்க்கரை குறைவையும் உண்டாக்கும்."
+          },
+          "action_advice": {
+            "en": "Avoid alcohol completely while managing diabetes with metformin.",
+            "te": "ఈ మందు వాడుతున్నప్పుడు ఆల్కహాల్ పూర్తిగా మానేయండి.",
+            "hi": "मधुमेह के मरीज मेटफॉर्मिन के साथ शराब से पूरी तरह दूर रहें।",
+            "ta": "மதுவை முற்றிலுமாக தவிர்க்கவும்."
+          },
+          "time_separation": "Strictly Avoid"
+        }
+      ],
+      "chronotherapy": {
+        "recommended_slot": "evening_meal",
+        "recommended_time": "8:00 PM (With Dinner)",
+        "clock_icon": "🍽️",
+        "efficacy_boost": {
+          "en": "Blunts Overnight Hepatic Glucose Spikes",
+          "te": "రాత్రిపూట షుగర్ లెవెల్స్ పెరగకుండా నిరోధిస్తుంది",
+          "hi": "रात में शुगर का बढ़ना रोकता है",
+          "ta": "இரவு நேர சர்க்கரை உயர்வை கட்டுப்படுத்துகிறது"
+        },
+        "scientific_rationale": {
+          "en": "Taking your extended-release metformin dose with evening dinner suppresses overnight hepatic gluconeogenesis, producing healthy fasting morning glucose readings.",
+          "te": "రాత్రి భోజనంతో తీసుకోవడం వల్ల కాలేయం రాత్రిపూట ఎక్కువ చక్కెరను ఉత్పత్తి చేయకుండా అడ్డుకుంటుంది, దీనివల్ల ఉదయం ఫాస్టింగ్ షుగర్ అదుపులో ఉంటుంది.",
+          "hi": "रात के खाने के साथ लेने से सुबह की खाली पेट (फास्टिंग) शुगर बिल्कुल नियंत्रित रहती है।",
+          "ta": "இரவு உணவோடு எடுப்பது காலை நேர ஃபாஸ்டிங் சர்க்கரையை சீராக வைக்க உதவும்."
+        }
+      }
+    },
+
+    "cetirizine": {
+      "generic_names": ["cetirizine", "levocetirizine", "fexofenadine"],
+      "brand_names": ["cetzine", "zyrtec", "allegra", "levocet", "montair-lc", "teczine", "alerid"],
+      "food_rule": {
+        "type": "flexible",
+        "title": {
+          "en": "With or Without Food",
+          "te": "ఆహారంతో లేదా లేకుండా",
+          "hi": "भोजन के साथ या बिना भोजन के",
+          "ta": "உணவுடனோ அல்லது இல்லாமலோ"
+        },
+        "description": {
+          "en": "Can be taken with or without food with water.",
+          "te": "ఆహారంతో సంబంధం లేకుండా నీటితో తీసుకోవచ్చు.",
+          "hi": "पानी के साथ खाने से पहले या बाद में ले सकते हैं।",
+          "ta": "தண்ணீருடன் உணவுக்கு முன் அல்லது பின் எடுக்கலாம்."
+        }
+      },
+      "conflicts": [
+        {
+          "id": "alcohol_sedation",
+          "category": "alcohol",
+          "severity": "danger",
+          "icon": "🍷",
+          "title": {
+            "en": "Severe Central Sedation & Reflex Impairment",
+            "te": "తీవ్రమైన నిద్రమత్తు మరియు స్పృహ మందగించడం",
+            "hi": "अत्यधिक उनींदापन और सुस्ती का खतरा",
+            "ta": "கடுமையான தூக்கம் மற்றும் மயக்கம்"
+          },
+          "description": {
+            "en": "Alcohol synergistic CNS depression produces extreme drowsiness, loss of motor reflexes, and dangerously impaired driving ability.",
+            "te": "ఆల్కహాల్‌తో కలిస్తే విపరీతమైన మత్తు, కళ్ళు మూతలు పడటం మరియు వాహనాలు నడపడం ప్రమాదకరంగా మారుతుంది.",
+            "hi": "शराब के साथ लेने से अत्यधिक नींद आती है और गाड़ी चलाना या मशीन चलाना खतरनाक हो सकता है।",
+            "ta": "மதுவுடன் எடுக்கும்போது அதிக தூக்கம் வந்து வாகனம் ஓட்டுவது ஆபத்தாக மாறும்."
+          },
+          "action_advice": {
+            "en": "Do not consume alcohol and avoid driving after taking antihistamines.",
+            "te": "ఈ మందు వేసుకున్న తర్వాత ఆల్కహాల్ తీసుకోవద్దు మరియు డ్రైవింగ్ చేయవద్దు.",
+            "hi": "दवा लेने के बाद शराब न पिएं और ड्राइविंग से बचें।",
+            "ta": "மது அருந்த வேண்டாம் மற்றும் வாகனம் ஓட்டுவதை தவிர்க்கவும்."
+          },
+          "time_separation": "Strictly Avoid"
+        }
+      ],
+      "chronotherapy": {
+        "recommended_slot": "bedtime",
+        "recommended_time": "9:30 PM (Bedtime)",
+        "clock_icon": "🌙",
+        "efficacy_boost": {
+          "en": "Prevents Morning Allergy Surge & Counters Drowsiness",
+          "te": "ఉదయపు తుమ్ములు మరియు అలర్జీని అడ్డుకుంటుంది",
+          "hi": "सुबह की एलर्जी रोकता है और दिन में सुस्ती नहीं होती",
+          "ta": "காலை ஒவ்வாமை தும்மலை தடுத்து பகல் சோர்வை போக்கும்"
+        },
+        "scientific_rationale": {
+          "en": "Histamine release follows a circadian peak between 4:00 AM and 6:00 AM, causing morning sneezing and runny nose. Taking at bedtime creates maximum receptor occupancy at dawn while sleeping through the mild sedative window.",
+          "te": "తెల్లవారుజామున 4 నుండి 6 గంటల మధ్య అలర్జీ హిస్టమైన్ ఎక్కువగా విడుదలవుతుంది. రాత్రి పడుకునే ముందు వేసుకుంటే నిద్రమత్తు రాత్రికి సరిపోతుంది మరియు ఉదయం తుమ్ములు రావు.",
+          "hi": "सुबह 4 से 6 बजे एलर्जी सबसे ज्यादा सक्रिय होती है। रात को सोते समय लेने से दिन में सुस्ती नहीं होती और सुबह छींकें नहीं आतीं।",
+          "ta": "அதிகாலை ஒவ்வாமை உச்சத்தை இரவு எடுக்கும் இந்த மருந்து மிகச்சரியாக கட்டுப்படுத்தும்."
+        }
+      }
+    },
+
+    "levothyroxine": {
+      "generic_names": ["levothyroxine", "thyroxine"],
+      "brand_names": ["thyronorm", "eltroxin", "synthroid", "thyrox"],
+      "food_rule": {
+        "type": "fasting_strict",
+        "title": {
+          "en": "First Thing in Morning on Completely Empty Stomach",
+          "te": "ఉదయాన్నే నిద్రలేవగానే ఖాళీ కడుపుతో",
+          "hi": "सुबह उठते ही सबसे पहले खाली पेट",
+          "ta": "காலையில் எழுந்தவுடன் வெறும் வயிற்றில்"
+        },
+        "description": {
+          "en": "Take immediately upon waking with a full glass of water. Wait at least 45 to 60 minutes before morning tea, coffee, or breakfast.",
+          "te": "నిద్రలేవగానే పూర్తి గ్లాసు నీటితో వేసుకోండి. టీ, కాఫీ లేదా టిఫిన్ చేయడానికి కనీసం 45 నుండి 60 నిమిషాలు ఆగాలి.",
+          "hi": "सुबह उठकर पूरे गिलास पानी के साथ लें। चाय, कॉफी या नाश्ता करने से पहले 45-60 मिनट का इंतजार करें।",
+          "ta": "விடிந்ததும் முழு டம்ளர் தண்ணீருடன் எடுக்கவும். டீ, காபி அல்லது காலை உணவுக்கு முன் 45-60 நிமிடங்கள் காத்திருக்கவும்."
+        }
+      },
+      "conflicts": [
+        {
+          "id": "caffeine_thyroxine",
+          "category": "caffeine",
+          "severity": "danger",
+          "icon": "☕",
+          "title": {
+            "en": "Morning Coffee & Tea Absorption Block",
+            "te": "ఉదయపు టీ మరియు కాఫీతో మందు నష్టం",
+            "hi": "सुबह की चाय/कॉफी से थायराइड दवा बेकार",
+            "ta": "காலை தேநீர், காபியினால் மருந்து பயனற்று போகும்"
+          },
+          "description": {
+            "en": "Coffee and tea drastically decrease intestinal absorption of levothyroxine by sequestering the tablet, leaving TSH levels uncontrolled.",
+            "te": "మందు వేసుకున్న వెంటనే టీ లేదా కాఫీ తాగితే థైరాయిడ్ మందు ఒంటికి పట్టదు, దీనివల్ల TSH లెవెల్స్ అదుపు తప్పతాయి.",
+            "hi": "दवा लेने के तुरंत बाद चाय या कॉफी पीने से थायराइड दवा का असर खत्म हो जाता है और TSH बढ़ जाता है।",
+            "ta": "மருந்து எடுத்த உடனே காபி, டீ குடித்தால் தைராய்டு அளவு கட்டுக்குள் வராது."
+          },
+          "action_advice": {
+            "en": "Wait a strict minimum of 60 minutes before drinking morning tea or coffee.",
+            "te": "టీ లేదా కాఫీ తాగడానికి ఖచ్చితంగా 60 నిమిషాలు వేచి ఉండండి.",
+            "hi": "चाय या कॉफी पीने से पहले कम से कम 60 मिनट रुकें।",
+            "ta": "காலை தேநீர் அல்லது காபி அருந்த குறைந்தது 60 நிமிடங்கள் காத்திருக்கவும்."
+          },
+          "time_separation": "Wait 60 mins"
+        },
+        {
+          "id": "calcium_iron_thyroid",
+          "category": "dairy",
+          "severity": "danger",
+          "icon": "🥛",
+          "title": {
+            "en": "Calcium & Iron Supplement Inactivation",
+            "te": "కాల్షియం మరియు ఐరన్ మందుల నిరోధం",
+            "hi": "कैल्शियम और आयरन की दवाओं से गंभीर रुकावट",
+            "ta": "கால்சியம் மற்றும் இரும்பு மருந்துகளுடன் மோதல்"
+          },
+          "description": {
+            "en": "Calcium tablets, milk, and iron supplements bind levothyroxine into an unabsorbable salt.",
+            "te": "కాల్షియం, పాలు మరియు ఐరన్ మందులు థైరాయిడ్ టాబ్లెట్‌ను నిర్వీర్యం చేస్తాయి.",
+            "hi": "कैल्शियम, दूध और आयरन की गोलियां थायराइड दवा को बांध देती हैं।",
+            "ta": "கால்சியம் மற்றும் இரும்பு சத்துக்கள் தைராய்டு மாத்திரையை பயனற்றதாக்கும்."
+          },
+          "action_advice": {
+            "en": "Take calcium or iron supplements at least 4 hours after your thyroid tablet.",
+            "te": "కాల్షియం లేదా ఐరన్ మాత్రలను థైరాయిడ్ మందు వేసుకున్న 4 గంటల తర్వాతే వేసుకోవాలి.",
+            "hi": "कैल्शियम या आयरन की दवाएं थायराइड की गोली के 4 घंटे बाद लें।",
+            "ta": "தைராய்டு மாத்திரை எடுத்து 4 மணி நேரம் கழித்தே கால்சியம் அல்லது இரும்பு மாத்திரை எடுக்க வேண்டும்."
+          },
+          "time_separation": "Wait 4 Hours"
+        }
+      ],
+      "chronotherapy": {
+        "recommended_slot": "morning_fasting",
+        "recommended_time": "6:30 AM (Wake-up)",
+        "clock_icon": "🌅",
+        "efficacy_boost": {
+          "en": "Optimal Bioavailability & Stable TSH Control",
+          "te": "గరిష్ట థైరాయిడ్ శోషణ మరియు స్థిరమైన TSH",
+          "hi": "थायराइड का सबसे सटीक नियंत्रण",
+          "ta": "சிறந்த தைராய்டு கட்டுப்பாடு"
+        },
+        "scientific_rationale": {
+          "en": "Gastric acidity in the prolonged fasting state is required for tablet dissolution and ileal absorption. Bedtime dosing is an acceptable alternative only if fasting 3 hours after dinner.",
+          "te": "రాత్రంతా ఏమీ తినకుండా ఖాళీ కడుపుతో ఉన్నప్పుడే ఈ మందు శరీరానికి పూర్తిగా పడుతుంది. ఉదయాన్నే వేసుకోవడం వల్ల థైరాయిడ్ సమస్య పూర్తిగా అదుపులో ఉంటుంది.",
+          "hi": "पूरी रात खाली पेट रहने के बाद सुबह सबसे पहले लेने से ही यह दवा शरीर में पूरी तरह घुल पाती है।",
+          "ta": "இரவு முழுவதும் வெறும் வயிற்றில் இருந்த பின் காலையில் எடுப்பது மட்டுமே முழு பலனை தரும்."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,439 @@
+[
+  {
+    "prescription_id": "prx-86c07101",
+    "id": "prx-86c07101",
+    "scanned_at": "2026-11-06T21:24:52.318486",
+    "created_at": "2026-11-06T21:24:52.318486",
+    "total_medicines": 2,
+    "medicines": [
+      {
+        "medicine_name": "Tab Amoxicillin 500mg",
+        "status": "unknown",
+        "flags": [
+          {
+            "type": "allergy_unknown",
+            "risk_level": "unknown",
+            "title": "Allergy Status Unknown",
+            "description": "Patient allergy profile is missing or unavailable. Do not assume safe.",
+            "recommendation": "Allergy status unknown \u2014 verify before dispensing."
+          }
+        ],
+        "dosage": "1 Tablet",
+        "frequency": "1-0-1",
+        "category": "Antibiotic",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Tab Pantoprazole 40mg",
+        "status": "unknown",
+        "flags": [
+          {
+            "type": "allergy_unknown",
+            "risk_level": "unknown",
+            "title": "Allergy Status Unknown",
+            "description": "Patient allergy profile is missing or unavailable. Do not assume safe.",
+            "recommendation": "Allergy status unknown \u2014 verify before dispensing."
+          }
+        ],
+        "dosage": "1 Tablet",
+        "frequency": "1-0-0",
+        "category": "Antacid / PPI",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 0,
+      "warning_count": 0,
+      "danger_count": 2
+    },
+    "has_conflicts": true,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-7991b7ae",
+    "id": "prx-7991b7ae",
+    "scanned_at": "2026-10-24T14:13:37.076061",
+    "created_at": "2026-10-24T14:13:37.076061",
+    "total_medicines": 2,
+    "medicines": [
+      {
+        "medicine_name": "Amoxicillin 500mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Capsule",
+        "frequency": "3 times daily",
+        "category": "Antibiotic",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Pantoprazole 40mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Once daily before breakfast",
+        "category": "Antacid",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 2,
+      "warning_count": 0,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-94a39116",
+    "id": "prx-94a39116",
+    "scanned_at": "2026-10-24T14:13:37.054303",
+    "created_at": "2026-10-24T14:13:37.054303",
+    "total_medicines": 2,
+    "medicines": [
+      {
+        "medicine_name": "Amoxicillin 500mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Capsule",
+        "frequency": "3 times daily",
+        "category": "Antibiotic",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Pantoprazole 40mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Once daily before breakfast",
+        "category": "Antacid",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 2,
+      "warning_count": 0,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-0442c334",
+    "id": "prx-0442c334",
+    "scanned_at": "2026-10-24T14:13:37.030088",
+    "created_at": "2026-10-24T14:13:37.030088",
+    "total_medicines": 2,
+    "medicines": [
+      {
+        "medicine_name": "Amoxicillin 500mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Capsule",
+        "frequency": "3 times daily",
+        "category": "Antibiotic",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Pantoprazole 40mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Once daily before breakfast",
+        "category": "Antacid",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 2,
+      "warning_count": 0,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-78bb7b73",
+    "id": "prx-78bb7b73",
+    "scanned_at": "2026-10-24T13:46:02.365752",
+    "created_at": "2026-10-24T13:46:02.365752",
+    "total_medicines": 5,
+    "medicines": [
+      {
+        "medicine_name": "Tab Sizodon Plus",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Morning and Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Tab Qutipin 200mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Tab Ativan (Lorazepam) 2mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Tab Rivotril 0.5mg (Clonazepam)",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Tab Serta 50mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 5,
+      "warning_count": 0,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-f5d9fcd4",
+    "id": "prx-f5d9fcd4",
+    "scanned_at": "2026-10-23T22:11:02.853056",
+    "created_at": "2026-10-23T22:11:02.853056",
+    "total_medicines": 5,
+    "medicines": [
+      {
+        "medicine_name": "Sizodon Plus",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Morning and Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Qutipin 200 mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Ativan (Lorazepam) 2 mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Rivotril 0.5 mg (Clonazepam)",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Serta 50 mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 5,
+      "warning_count": 0,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-283d3c7d",
+    "id": "prx-283d3c7d",
+    "scanned_at": "2026-10-12T20:45:30.961213",
+    "created_at": "2026-10-12T20:45:30.961213",
+    "total_medicines": 5,
+    "medicines": [
+      {
+        "medicine_name": "Sizodon Plus",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Morning and Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Qutipin 200 mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Ativan (Lorazepam) 2 mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Rivotril 0.5 mg (Clonazepam)",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "SERTA 50 mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Night",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 5,
+      "warning_count": 0,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-76110239",
+    "id": "prx-76110239",
+    "scanned_at": "2026-10-12T19:53:56.991706",
+    "created_at": "2026-10-12T19:53:56.991706",
+    "total_medicines": 2,
+    "medicines": [
+      {
+        "medicine_name": "Amoxicillin 500mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Capsule",
+        "frequency": "3 times daily",
+        "category": "Antibiotic",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Pantoprazole 40mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Once daily before breakfast",
+        "category": "Antacid",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 2,
+      "warning_count": 0,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-1cd3a3dc",
+    "id": "prx-1cd3a3dc",
+    "scanned_at": "2026-10-12T19:53:56.975447",
+    "created_at": "2026-10-12T19:53:56.975447",
+    "total_medicines": 2,
+    "medicines": [
+      {
+        "medicine_name": "Amoxicillin 500mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Capsule",
+        "frequency": "3 times daily",
+        "category": "Antibiotic",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Pantoprazole 40mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Once daily before breakfast",
+        "category": "Antacid",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 2,
+      "warning_count": 0,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-16a5bd2d",
+    "id": "prx-16a5bd2d",
+    "scanned_at": "2026-10-12T19:53:56.966881",
+    "created_at": "2026-10-12T19:53:56.966881",
+    "total_medicines": 2,
+    "medicines": [
+      {
+        "medicine_name": "Amoxicillin 500mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Capsule",
+        "frequency": "3 times daily",
+        "category": "Antibiotic",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Pantoprazole 40mg",
+        "status": "clear",
+        "flags": [],
+        "dosage": "1 Tablet",
+        "frequency": "Once daily before breakfast",
+        "category": "Antacid",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 2,
+      "warning_count": 0,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  }
+]

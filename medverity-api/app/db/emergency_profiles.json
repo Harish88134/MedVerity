@@ -1,0 +1,75 @@
+{
+  "med-ice-101": {
+    "id": "med-ice-101",
+    "user_id": "med-ice-101",
+    "full_name": "Harish K.",
+    "blood_group": "O+ Positive",
+    "allergies": [
+      "pencillain"
+    ],
+    "critical_meds": [
+      "Atorvastatin 20mg (Bedtime)",
+      "Metformin 500mg (Morning)"
+    ],
+    "emergency_contact_name": "Priya (Daughter)",
+    "emergency_contact_phone": "+91 98765 43210",
+    "organ_donor": true,
+    "medical_notes": "Type 2 Diabetes, Mild Hypertension. Resuscitation: Full Code.",
+    "updated_at": "2026-10-12T19:48:31.935033"
+  },
+  "user-5178": {
+    "id": "med-ice-101",
+    "user_id": "user-5178",
+    "full_name": "Harish K.",
+    "blood_group": "O+ Positive",
+    "allergies": [
+      "pencillain"
+    ],
+    "critical_meds": [
+      "Atorvastatin 20mg (Bedtime)",
+      "Metformin 500mg (Morning)"
+    ],
+    "emergency_contact_name": "Priya (Daughter)",
+    "emergency_contact_phone": "+91 98765 43210",
+    "organ_donor": true,
+    "medical_notes": "Type 2 Diabetes, Mild Hypertension. Resuscitation: Full Code.",
+    "updated_at": "2026-10-12T19:57:49.288506"
+  },
+  "365156f8-2575-4e46-a6d9-d51c1923d456": {
+    "id": "med-ice-101",
+    "user_id": "365156f8-2575-4e46-a6d9-d51c1923d456",
+    "full_name": "Harish K.",
+    "blood_group": "O+ Positive",
+    "allergies": [
+      "pencillain"
+    ],
+    "critical_meds": [
+      "Atorvastatin 20mg (Bedtime)",
+      "Metformin 500mg (Morning)"
+    ],
+    "emergency_contact_name": "Priya (Daughter)",
+    "emergency_contact_phone": "+91 98765 43210",
+    "organ_donor": true,
+    "medical_notes": "Type 2 Diabetes, Mild Hypertension. Resuscitation: Full Code.",
+    "updated_at": "2026-10-12T23:03:28.853915"
+  },
+  "default_patient": {
+    "id": "med-ice-101",
+    "user_id": "default_patient",
+    "full_name": "Harish K.",
+    "blood_group": "O+ Positive",
+    "allergies": [
+      "penicillin"
+    ],
+    "critical_meds": [
+      "Paracetamol 650mg",
+      "Metformin 500mg",
+      "Atorvastatin 10mg"
+    ],
+    "emergency_contact_name": "Priya (Daughter)",
+    "emergency_contact_phone": "+91 98765 43210",
+    "organ_donor": true,
+    "medical_notes": "Type 2 Diabetes, Mild Hypertension. Resuscitation: Full Code.",
+    "updated_at": "2026-11-06T21:24:48.691068"
+  }
+}

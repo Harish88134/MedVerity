@@ -1,0 +1,102 @@
+[
+  {
+    "brand_name": "Augmentin 625 Duo",
+    "generic_salts": "Amoxicillin (500mg) + Clavulanic Acid (125mg)",
+    "branded_price": 215.50,
+    "generic_price": 42.00,
+    "savings_pct": 80,
+    "manufacturer_generic": "Jan Aushadhi / Bureau of Pharma PSUs of India",
+    "bioequivalence_certified": true,
+    "category": "Antibiotic"
+  },
+  {
+    "brand_name": "Pan 40",
+    "generic_salts": "Pantoprazole (40mg)",
+    "branded_price": 165.00,
+    "generic_price": 28.50,
+    "savings_pct": 82,
+    "manufacturer_generic": "Jan Aushadhi",
+    "bioequivalence_certified": true,
+    "category": "Antacid / PPI"
+  },
+  {
+    "brand_name": "Glycomet 500 SR",
+    "generic_salts": "Metformin Hydrochloride (500mg)",
+    "branded_price": 54.00,
+    "generic_price": 11.20,
+    "savings_pct": 79,
+    "manufacturer_generic": "Jan Aushadhi",
+    "bioequivalence_certified": true,
+    "category": "Antidiabetic"
+  },
+  {
+    "brand_name": "Telma 40",
+    "generic_salts": "Telmisartan (40mg)",
+    "branded_price": 140.00,
+    "generic_price": 22.00,
+    "savings_pct": 84,
+    "manufacturer_generic": "Jan Aushadhi",
+    "bioequivalence_certified": true,
+    "category": "Blood Pressure (ARB)"
+  },
+  {
+    "brand_name": "Atorva 20",
+    "generic_salts": "Atorvastatin (20mg)",
+    "branded_price": 240.00,
+    "generic_price": 38.00,
+    "savings_pct": 84,
+    "manufacturer_generic": "Jan Aushadhi",
+    "bioequivalence_certified": true,
+    "category": "Statin / Cholesterol"
+  },
+  {
+    "brand_name": "Dolo 650",
+    "generic_salts": "Paracetamol (650mg)",
+    "branded_price": 33.50,
+    "generic_price": 9.50,
+    "savings_pct": 71,
+    "manufacturer_generic": "Jan Aushadhi",
+    "bioequivalence_certified": true,
+    "category": "Analgesic / Antipyretic"
+  },
+  {
+    "brand_name": "Cetzine 10",
+    "generic_salts": "Cetirizine Hydrochloride (10mg)",
+    "branded_price": 42.00,
+    "generic_price": 8.00,
+    "savings_pct": 80,
+    "manufacturer_generic": "Jan Aushadhi",
+    "bioequivalence_certified": true,
+    "category": "Antihistamine"
+  },
+  {
+    "brand_name": "Azithral 500",
+    "generic_salts": "Azithromycin (500mg)",
+    "branded_price": 132.00,
+    "generic_price": 35.00,
+    "savings_pct": 73,
+    "manufacturer_generic": "Jan Aushadhi",
+    "bioequivalence_certified": true,
+    "category": "Macrolide Antibiotic"
+  },
+  {
+    "brand_name": "Thyronorm 50mcg",
+    "generic_salts": "Thyroxine Sodium (50mcg)",
+    "branded_price": 178.00,
+    "generic_price": 45.00,
+    "savings_pct": 74,
+    "manufacturer_generic": "Jan Aushadhi",
+    "bioequivalence_certified": true,
+    "category": "Thyroid Hormone"
+  },
+  {
+    "brand_name": "Combiflam",
+    "generic_salts": "Ibuprofen (400mg) + Paracetamol (325mg)",
+    "branded_price": 48.00,
+    "generic_price": 14.00,
+    "savings_pct": 70,
+    "manufacturer_generic": "Jan Aushadhi",
+    "bioequivalence_certified": true,
+    "category": "NSAID Pain Reliever"
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "test-user-1": {
+    "id": "test-user-1",
+    "name": "Harish Kumar",
+    "phone": "+919876543210",
+    "preferred_language": "te",
+    "role": "patient"
+  },
+  "4eabe7fa-d8d4-4c10-a89b-3379df4fb8eb": {
+    "id": "4eabe7fa-d8d4-4c10-a89b-3379df4fb8eb",
+    "name": "Test User",
+    "phone": "+91 9391843586",
+    "preferred_language": "en",
+    "role": "patient"
+  },
+  "365156f8-2575-4e46-a6d9-d51c1923d456": {
+    "id": "365156f8-2575-4e46-a6d9-d51c1923d456",
+    "name": "B Harish",
+    "phone": "9391843586",
+    "preferred_language": "en",
+    "role": "patient"
+  },
+  "demo_patient_test_99@example.com": {
+    "id": "user-4",
+    "name": "Demo Patient",
+    "email": "demo_patient_test_99@example.com",
+    "phone": "",
+    "preferred_language": "en",
+    "role": "patient"
+  },
+  "2006harishb@gmail.com": {
+    "id": "user-5",
+    "name": "Hari",
+    "email": "2006harishb@gmail.com",
+    "phone": "",
+    "preferred_language": "en",
+    "role": "patient"
+  }
+}

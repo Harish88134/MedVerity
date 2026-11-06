@@ -1,0 +1,52 @@
+{
+  "Paracetamol 650 mg": {
+    "food_interactions": [
+      {
+        "severity": "low",
+        "title": "Alcohol",
+        "description": "Avoid excessive alcohol consumption as it may increase the risk of liver damage when combined with paracetamol."
+      }
+    ],
+    "pregnancy_lactation": [
+      {
+        "severity": "low",
+        "title": "Pregnancy Safe",
+        "description": "Generally considered safe during pregnancy and breastfeeding when taken at recommended doses."
+      }
+    ],
+    "drug_interactions": [
+      {
+        "severity": "medium",
+        "title": "Warfarin",
+        "description": "Regular daily use of paracetamol may increase the blood-thinning effect of warfarin."
+      }
+    ],
+    "high_risk": false,
+    "active_ingredients": ["paracetamol", "acetaminophen"]
+  },
+  "Metformin 500mg": {
+    "food_interactions": [
+      {
+        "severity": "medium",
+        "title": "Alcohol",
+        "description": "Alcohol increases the risk of lactic acidosis and can cause low blood sugar."
+      }
+    ],
+    "pregnancy_lactation": [
+      {
+        "severity": "medium",
+        "title": "Pregnancy Consult",
+        "description": "Consult your doctor. Insulin is generally preferred during pregnancy for blood sugar control."
+      }
+    ],
+    "drug_interactions": [
+      {
+        "severity": "high",
+        "title": "Iodinated Contrast Media",
+        "description": "Must be temporarily discontinued before imaging procedures involving iodinated contrast to prevent kidney issues."
+      }
+    ],
+    "high_risk": true,
+    "active_ingredients": ["metformin"]
+  }
+}
