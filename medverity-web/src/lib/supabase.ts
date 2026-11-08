@@ -191,6 +191,10 @@ export const supabase = {
     },
 
     async signIn(data: { email: string; password: string }) {
+      if (!data.email || !data.password) {
+        return { error: { message: 'Please enter both email and password.' } };
+      }
+
       if (HAS_REAL_SUPABASE) {
         try {
           const client = await getRealClient();
@@ -200,13 +204,10 @@ export const supabase = {
           }), 4000);
 
           if (result.error) {
-            const msg = result.error.message || '';
-            const isNetworkError = msg.toLowerCase().includes('fetch') || msg.toLowerCase().includes('network') || msg.toLowerCase().includes('timeout');
-            // If Supabase specifically says invalid credentials, return the error immediately!
-            if (!isNetworkError) {
-              return { error: { message: msg || 'Invalid email or password.' } };
-            }
-          } else if (result.data?.user) {
+            return { error: { message: result.error.message || 'Invalid email or password.' } };
+          }
+
+          if (result.data?.user) {
             const meta = result.data.user?.user_metadata || {};
             const user: User = {
               id: result.data.user?.id || '',
@@ -222,11 +223,12 @@ export const supabase = {
             return { data: { user }, error: null };
           }
         } catch (e: any) {
-          const errMsg = e?.message || '';
-          if (errMsg.toLowerCase().includes('invalid') || errMsg.toLowerCase().includes('credentials')) {
+          const errMsg = (e?.message || '').toLowerCase();
+          if (errMsg.includes('invalid') || errMsg.includes('credentials') || errMsg.includes('password')) {
             return { error: { message: 'Invalid email or password.' } };
           }
-          console.warn('[Supabase] Sign in network issue, falling back to backend & local store:', e);
+          console.warn('[Supabase] Sign in error:', e);
+          return { error: { message: 'Invalid email or password.' } };
         }
       }
 
