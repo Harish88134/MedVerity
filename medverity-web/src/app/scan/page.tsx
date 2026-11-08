@@ -71,6 +71,17 @@ export default function ScanPage() {
         formData.append('user_id', user.id);
       }
       
+      // Pass allergies for prescription verification even if not signed in
+      const localAllergies = localStorage.getItem('medverity_allergies');
+      if (localAllergies) {
+        try {
+          const parsed = JSON.parse(localAllergies);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            formData.append('user_allergies', parsed.join(','));
+          }
+        } catch {}
+      }
+      
       const endpoint = scanMode === 'single' 
           ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/scan`
           : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/prescription/verify`;

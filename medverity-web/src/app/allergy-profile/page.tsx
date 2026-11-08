@@ -47,15 +47,27 @@ export default function AllergyProfilePage() {
   const addAllergy = () => {
     const name = inputValue.trim();
     if (name && !allergies.includes(name)) {
-      setAllergies([...allergies, name]);
+      const updated = [...allergies, name];
+      setAllergies(updated);
       setInputValue('');
       setShowSaved(false);
+      try {
+        localStorage.setItem('medverity_allergies', JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
   const removeAllergy = (name: string) => {
-    setAllergies(allergies.filter(a => a !== name));
+    const updated = allergies.filter(a => a !== name);
+    setAllergies(updated);
     setShowSaved(false);
+    try {
+      localStorage.setItem('medverity_allergies', JSON.stringify(updated));
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleSave = async () => {

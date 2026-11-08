@@ -46,6 +46,7 @@ def load_safety_data():
 class PrescriptionVerifyRequest(BaseModel):
     ocr_text: Optional[str] = ""
     user_id: Optional[str] = ""
+    user_allergies: Optional[str] = ""
     is_pregnant_or_lactating: Optional[bool] = False
     language: Optional[str] = "en"
     manual_medicines: Optional[List[str]] = None
@@ -53,6 +54,7 @@ class PrescriptionVerifyRequest(BaseModel):
 async def _process_verification(
     ocr_text: str,
     user_id: str = "",
+    user_allergies: str = "",
     is_pregnant_or_lactating: bool = False,
     language: str = "en",
     manual_medicines: Optional[List[str]] = None
@@ -100,7 +102,9 @@ async def _process_verification(
     from app.utils.drug_knowledge import check_allergy_conflict, resolve_active_ingredients
 
     patient_allergies = None
-    if user_id:
+    if user_allergies:
+        patient_allergies = [a.strip() for a in user_allergies.split(",") if a.strip()]
+    elif user_id:
         if supabase:
             try:
                 res = supabase.table("allergies").select("allergy_name").eq("user_id", user_id).execute()
@@ -111,8 +115,8 @@ async def _process_verification(
         else:
             patient_allergies = load_user_allergies_file()
     else:
-        # User not specified - allergy status is unknown
-        patient_allergies = None
+        # Fall back to locally stored profile if guest/unspecified
+        patient_allergies = load_user_allergies_file() or None
 
     reminders_data = load_reminders()
     active_meds = []
@@ -284,6 +288,7 @@ async def verify_prescription(
         return await _process_verification(
             ocr_text=body.get("ocr_text", ""),
             user_id=body.get("user_id", ""),
+            user_allergies=body.get("user_allergies", ""),
             is_pregnant_or_lactating=body.get("is_pregnant_or_lactating", False),
             language=body.get("language", "en"),
             manual_medicines=body.get("manual_medicines", None)
@@ -298,9 +303,13 @@ async def verify_prescription(
             ocr_res = await perform_ocr(image_bytes)
             ocr_text = ocr_res.get("text", "")
 
+    form_data = await request.form()
+    user_allergies_val = form_data.get("user_allergies", "")
+
     return await _process_verification(
         ocr_text=ocr_text,
         user_id=user_id or "",
+        user_allergies=user_allergies_val or "",
         is_pregnant_or_lactating=bool(is_pregnant),
         language="en"
     )

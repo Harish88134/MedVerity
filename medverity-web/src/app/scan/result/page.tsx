@@ -150,6 +150,28 @@ function ScanResultContent() {
             translated_text: response.translated_text
         });
         setMode('high');
+
+        // Check allergies for confirmed medicine
+        const savedAllergies = localStorage.getItem('medverity_allergies');
+        const userStr = localStorage.getItem('medverity_user');
+        let userId = '';
+        try { if (userStr) userId = JSON.parse(userStr)?.id || ''; } catch {}
+        
+        const confirmedMedName = response.extraction?.medicine_name || medicineName;
+        const queryParams = new URLSearchParams({ medicine_name: confirmedMedName });
+        if (savedAllergies) {
+            try { queryParams.append('user_allergies', JSON.parse(savedAllergies).join(',')); } catch {}
+        }
+        if (userId) {
+            queryParams.append('user_id', userId);
+        }
+        const allergyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/allergy/check?${queryParams.toString()}`);
+        const allergyData = await allergyRes.json();
+        if (allergyData.has_allergy) {
+            setAllergyWarning(allergyData.reason || (allergyData.matches || []).join(', '));
+        } else {
+            setAllergyWarning(null);
+        }
     } catch(err) {
         console.error(err);
         setError("Failed to fetch details for selected medicine.");
