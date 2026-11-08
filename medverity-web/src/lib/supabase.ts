@@ -204,10 +204,17 @@ export const supabase = {
           }), 4000);
 
           if (result.error) {
-            return { error: { message: result.error.message || 'Invalid email or password.' } };
-          }
-
-          if (result.data?.user) {
+            const msg = result.error.message || '';
+            const isNetworkError = msg.toLowerCase().includes('fetch') || 
+                                   msg.toLowerCase().includes('network') || 
+                                   msg.toLowerCase().includes('timeout') ||
+                                   msg.toLowerCase().includes('load failed') ||
+                                   msg.toLowerCase().includes('failed to fetch');
+            if (!isNetworkError) {
+              return { error: { message: msg || 'Invalid email or password.' } };
+            }
+            console.warn('[Supabase] Sign in reachability/network error ("' + msg + '"), falling back to backend & local store.');
+          } else if (result.data?.user) {
             const meta = result.data.user?.user_metadata || {};
             const user: User = {
               id: result.data.user?.id || '',
@@ -224,11 +231,11 @@ export const supabase = {
           }
         } catch (e: any) {
           const errMsg = (e?.message || '').toLowerCase();
-          if (errMsg.includes('invalid') || errMsg.includes('credentials') || errMsg.includes('password')) {
+          const isCredentialError = errMsg.includes('invalid') || errMsg.includes('credentials') || errMsg.includes('password');
+          if (isCredentialError) {
             return { error: { message: 'Invalid email or password.' } };
           }
-          console.warn('[Supabase] Sign in error:', e);
-          return { error: { message: 'Invalid email or password.' } };
+          console.warn('[Supabase] Sign in network unreachable, falling back to backend & local store:', e);
         }
       }
 
