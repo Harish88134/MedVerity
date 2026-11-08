@@ -140,10 +140,21 @@ async def login(request: LoginRequest):
                     phone=user_meta.get("phone", local_user.get("phone", "") if local_user else ""),
                     preferred_language=user_meta.get("preferred_language", "en"),
                 )
+            else:
+                raise HTTPException(status_code=401, detail="Invalid email or password.")
+        except HTTPException:
+            raise
         except Exception as e:
-            print(f"[Auth] Supabase login failed: {e}. Falling back to local store.")
+            err_str = str(e).lower()
+            if "invalid" in err_str or "credential" in err_str or "password" in err_str:
+                raise HTTPException(status_code=401, detail="Invalid email or password.")
+            print(f"[Auth] Supabase login error: {e}. Falling back to local store check.")
 
     if local_user:
+        # Check password if local user has password record
+        stored_pw = local_user.get("password")
+        if stored_pw and stored_pw != request.password:
+            raise HTTPException(status_code=401, detail="Invalid email or password.")
         return AuthResponse(
             message="Login successful",
             user_id=local_user.get("id"),
@@ -154,14 +165,8 @@ async def login(request: LoginRequest):
             preferred_language=local_user.get("preferred_language", "en"),
         )
 
-    # Allow login in dev mode with provided email
-    dev_id = f"user-{abs(hash(request.email)) % 10000}"
-    return AuthResponse(
-        message="Login successful (developer mode)",
-        user_id=dev_id,
-        token=f"dev-token-{dev_id}",
-        email=request.email,
-    )
+    # Reject non-existing users with invalid credentials
+    raise HTTPException(status_code=401, detail="Invalid email or password.")
 
 
 @router.put("/profile")

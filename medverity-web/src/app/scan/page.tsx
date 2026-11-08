@@ -18,6 +18,9 @@ export default function ScanPage() {
   
   const [hasCamera, setHasCamera] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [flashOn, setFlashOn] = useState(false);
+  const [hasTorchSupport, setHasTorchSupport] = useState(false);
+  const streamRef = useRef<MediaStream | null>(null);
   const router = useRouter();
   const { user } = useAuth();
 
@@ -42,7 +45,17 @@ export default function ScanPage() {
         }
         if (isMounted && videoRef.current && stream) {
           videoRef.current.srcObject = stream;
+          streamRef.current = stream;
           setHasCamera(true);
+
+          // Check if torch/flash is supported by device camera track
+          const videoTrack = stream.getVideoTracks()[0];
+          if (videoTrack) {
+            const capabilities = (videoTrack.getCapabilities ? videoTrack.getCapabilities() : {}) as any;
+            if (capabilities.torch) {
+              setHasTorchSupport(true);
+            }
+          }
         }
       } catch (err) {
         console.warn("Camera access not available or device in use:", err);
@@ -59,8 +72,26 @@ export default function ScanPage() {
       if (stream) {
         stream.getTracks().forEach(track => track.stop());
       }
+      streamRef.current = null;
     };
   }, []);
+
+  const toggleFlash = useCallback(async () => {
+    if (!streamRef.current) return;
+    const videoTrack = streamRef.current.getVideoTracks()[0];
+    if (!videoTrack) return;
+
+    try {
+      const nextState = !flashOn;
+      // Web standards Camera Torch API (supported on Android Chrome, Samsung Internet, and modern mobile WebKit)
+      await (videoTrack as any).applyConstraints({
+        advanced: [{ torch: nextState }]
+      });
+      setFlashOn(nextState);
+    } catch (err) {
+      console.warn("Torch failed or not supported on this device/browser:", err);
+    }
+  }, [flashOn]);
 
   const processImage = useCallback(async (fileOrBlob: File | Blob) => {
     setIsProcessing(true);
@@ -416,6 +447,10 @@ export default function ScanPage() {
         {/* Flash */}
         <button
           id="flash-btn"
+          type="button"
+          onClick={toggleFlash}
+          disabled={!hasCamera}
+          title={flashOn ? "Turn flash off" : "Turn flash on"}
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -423,23 +458,28 @@ export default function ScanPage() {
             gap: '0.375rem',
             background: 'none',
             border: 'none',
-            cursor: 'pointer',
-            color: 'var(--color-text-secondary)',
+            cursor: hasCamera ? 'pointer' : 'not-allowed',
+            color: flashOn ? 'var(--color-teal-700)' : 'var(--color-text-secondary)',
             fontFamily: 'var(--font-sans)',
+            opacity: hasCamera ? 1 : 0.4,
           }}
         >
           <div style={{
             width: '48px',
             height: '48px',
             borderRadius: '50%',
-            background: 'var(--color-teal-50)',
+            background: flashOn ? 'var(--color-teal-600)' : 'var(--color-teal-50)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            transition: 'all 0.2s ease',
+            boxShadow: flashOn ? '0 0 12px rgba(13, 148, 136, 0.6)' : 'none',
           }}>
-            <Zap size={22} color="var(--color-teal-600)" />
+            <Zap size={22} color={flashOn ? 'white' : 'var(--color-teal-600)'} fill={flashOn ? 'white' : 'none'} />
           </div>
-          <span style={{ fontSize: '0.75rem' }}>Flash</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: flashOn ? 600 : 400 }}>
+            {flashOn ? 'Torch On' : 'Flash'}
+          </span>
         </button>
       </div>
 

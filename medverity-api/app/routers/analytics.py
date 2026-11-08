@@ -79,14 +79,42 @@ async def get_analytics(user_id: str = ""):
         {"name": "Missed", "value": 100 - adherence_rate, "color": "var(--color-surface-secondary)"},
     ]
 
+    # Calculate dynamic weekly distribution from real reminders data
+    days_order = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    dynamic_weekly = {d: {"taken": 0, "missed": 0} for d in days_order}
+
+    # Populate daily taken/missed based on reminders
+    if supabase and user_id:
+        try:
+            for r in (rows or []):
+                created_str = r.get("created_at")
+                if created_str:
+                    try:
+                        from datetime import datetime
+                        dt = datetime.fromisoformat(created_str.replace("Z", "+00:00"))
+                        day_name = dt.strftime("%a")
+                        if day_name in dynamic_weekly:
+                            if r.get("status") == "taken":
+                                dynamic_weekly[day_name]["taken"] += 1
+                            else:
+                                dynamic_weekly[day_name]["missed"] += 1
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+
+    # If all 0 (e.g. brand new user without history), provide meaningful real proportion based on current taken/missed
+    has_activity = any(v["taken"] > 0 or v["missed"] > 0 for v in dynamic_weekly.values())
+    if not has_activity and (taken_count > 0 or missed_count > 0):
+        from datetime import datetime
+        current_day = datetime.now().strftime("%a")
+        if current_day in dynamic_weekly:
+            dynamic_weekly[current_day]["taken"] = taken_count
+            dynamic_weekly[current_day]["missed"] = missed_count
+
     weekly_data = [
-        {"day": "Mon", "taken": 3, "missed": 0},
-        {"day": "Tue", "taken": 2, "missed": 1},
-        {"day": "Wed", "taken": 3, "missed": 0},
-        {"day": "Thu", "taken": 3, "missed": 0},
-        {"day": "Fri", "taken": taken_count, "missed": missed_count},
-        {"day": "Sat", "taken": 0, "missed": 0},
-        {"day": "Sun", "taken": 0, "missed": 0},
+        {"day": d, "taken": dynamic_weekly[d]["taken"], "missed": dynamic_weekly[d]["missed"]}
+        for d in days_order
     ]
 
     return {

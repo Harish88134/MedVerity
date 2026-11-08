@@ -121,6 +121,7 @@ export default function VoicePharmacistModal({
 
   return (
     <div
+      className="chatbot-overlay"
       style={{
         position: 'fixed',
         inset: 0,
@@ -142,13 +143,9 @@ export default function VoicePharmacistModal({
       }}
     >
       <div
+        className="chatbot-dialog"
         style={{
           background: 'var(--color-surface)',
-          borderRadius: 'var(--radius-2xl)',
-          width: '100%',
-          maxWidth: '560px',
-          height: '88vh',
-          maxHeight: '740px',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
@@ -349,6 +346,7 @@ export default function VoicePharmacistModal({
 
         {/* ── Messages & Visual Consultation Area ── */}
         <div
+          className="chatbot-messages"
           style={{
             flex: 1,
             overflowY: 'auto',
@@ -721,6 +719,7 @@ export default function VoicePharmacistModal({
 
         {/* ── Bottom Input & Push-to-Talk Dock ── */}
         <div
+          className="chatbot-input-dock"
           style={{
             padding: '0.875rem 1.25rem',
             background: 'var(--color-surface)',

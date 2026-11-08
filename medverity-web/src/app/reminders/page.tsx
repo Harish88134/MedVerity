@@ -43,6 +43,20 @@ export default function RemindersPage() {
   const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   const todayIndex = today.getDay();
 
+  // Dynamic date selection state
+  const [selectedDayOffset, setSelectedDayOffset] = useState<number>(0);
+  const [weekOffset, setWeekOffset] = useState<number>(0);
+
+  // Selected date computation
+  const activeDate = new Date();
+  activeDate.setDate(today.getDate() + (weekOffset * 7) + selectedDayOffset);
+
+  // Format active date string (e.g. "Today, Nov 8" or "Wednesday, Nov 11")
+  const isSelectedToday = weekOffset === 0 && selectedDayOffset === 0;
+  const activeDateLabel = isSelectedToday
+    ? `Today, ${activeDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+    : activeDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
   // Keep phone prefilled from user profile
   useEffect(() => {
     if (user?.phone) {
@@ -140,7 +154,8 @@ export default function RemindersPage() {
   const fetchSmsLogs = async () => {
     setLoadingLogs(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/reminders/sms-logs`);
+      const phoneParam = user?.phone ? `?user_phone=${encodeURIComponent(user.phone)}` : '';
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/reminders/sms-logs${phoneParam}`);
       const data = await res.json();
       setSmsLogs(data.logs || []);
     } catch (e) {
@@ -413,23 +428,107 @@ export default function RemindersPage() {
         </div>
       </div>
 
-      {/* Calendar Strip */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <button style={{ background: 'none', border: 'none', cursor: 'pointer' }}><ChevronLeft color="var(--color-text-muted)" /></button>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          {weekDays.map((day, i) => (
-            <div key={i} style={{
-              width: '40px', height: '56px', borderRadius: 'var(--radius-full)',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-              background: i === todayIndex ? 'var(--color-teal-600)' : 'transparent',
-              color: i === todayIndex ? 'white' : 'var(--color-text-primary)',
-            }}>
-              <span style={{ fontSize: '0.75rem', opacity: i === todayIndex ? 0.9 : 0.6 }}>{day}</span>
-              <span style={{ fontWeight: 600, marginTop: '0.25rem' }}>{today.getDate() - todayIndex + i}</span>
-            </div>
-          ))}
+      {/* Calendar Strip with Interactive Navigation */}
+      <div style={{ marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-teal-700)' }}>
+              📅 {activeDateLabel}
+            </span>
+            {!isSelectedToday && (
+              <button
+                type="button"
+                onClick={() => { setWeekOffset(0); setSelectedDayOffset(0); }}
+                style={{
+                  padding: '0.2rem 0.5rem',
+                  fontSize: '0.6875rem',
+                  borderRadius: 'var(--radius-full)',
+                  border: '1px solid var(--color-teal-300)',
+                  background: 'var(--color-teal-50)',
+                  color: 'var(--color-teal-700)',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                Go to Today
+              </button>
+            )}
+          </div>
+          <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>
+            Tap any day to view schedule
+          </span>
         </div>
-        <button style={{ background: 'none', border: 'none', cursor: 'pointer' }}><ChevronRight color="var(--color-text-muted)" /></button>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--color-surface)', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-2xl)', border: '1px solid var(--color-border-light)', boxShadow: 'var(--shadow-card)' }}>
+          <button
+            type="button"
+            onClick={() => setWeekOffset(w => w - 1)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.375rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            title="Previous week"
+            aria-label="Previous week"
+          >
+            <ChevronLeft size={20} color="var(--color-teal-700)" />
+          </button>
+          
+          <div style={{ display: 'flex', gap: '0.35rem', overflowX: 'auto', flex: 1, justifyContent: 'space-around' }}>
+            {weekDays.map((day, i) => {
+              const dayOffsetFromToday = (weekOffset * 7) + (i - todayIndex);
+              const isSelected = selectedDayOffset === (dayOffsetFromToday - (weekOffset * 7));
+              const isTodayCell = weekOffset === 0 && i === todayIndex;
+
+              const cellDate = new Date();
+              cellDate.setDate(today.getDate() + dayOffsetFromToday);
+              const dateNumber = cellDate.getDate();
+
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setSelectedDayOffset(i - todayIndex)}
+                  style={{
+                    width: '38px',
+                    height: '54px',
+                    borderRadius: 'var(--radius-xl)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: isSelected
+                      ? 'var(--color-teal-600)'
+                      : isTodayCell
+                        ? 'var(--color-teal-100)'
+                        : 'transparent',
+                    color: isSelected
+                      ? 'white'
+                      : isTodayCell
+                        ? 'var(--color-teal-800)'
+                        : 'var(--color-text-primary)',
+                    border: isTodayCell && !isSelected ? '1.5px solid var(--color-teal-500)' : 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    boxShadow: isSelected ? '0 3px 10px rgba(13, 148, 136, 0.35)' : 'none',
+                  }}
+                >
+                  <span style={{ fontSize: '0.6875rem', opacity: isSelected ? 0.9 : 0.6, fontWeight: isSelected ? 700 : 500 }}>{day}</span>
+                  <span style={{ fontWeight: 700, fontSize: '0.875rem', marginTop: '0.15rem' }}>{dateNumber}</span>
+                  {isTodayCell && !isSelected && (
+                    <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'var(--color-teal-600)', marginTop: '2px' }} />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setWeekOffset(w => w + 1)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.375rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            title="Next week"
+            aria-label="Next week"
+          >
+            <ChevronRight size={20} color="var(--color-teal-700)" />
+          </button>
+        </div>
       </div>
 
       {loading ? (

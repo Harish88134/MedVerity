@@ -197,9 +197,16 @@ export const supabase = {
           const result = await withTimeout(client.auth.signInWithPassword({
             email: data.email,
             password: data.password,
-          }), 3000);
+          }), 4000);
 
-          if (result.data?.user) {
+          if (result.error) {
+            const msg = result.error.message || '';
+            const isNetworkError = msg.toLowerCase().includes('fetch') || msg.toLowerCase().includes('network') || msg.toLowerCase().includes('timeout');
+            // If Supabase specifically says invalid credentials, return the error immediately!
+            if (!isNetworkError) {
+              return { error: { message: msg || 'Invalid email or password.' } };
+            }
+          } else if (result.data?.user) {
             const meta = result.data.user?.user_metadata || {};
             const user: User = {
               id: result.data.user?.id || '',
@@ -215,6 +222,10 @@ export const supabase = {
             return { data: { user }, error: null };
           }
         } catch (e: any) {
+          const errMsg = e?.message || '';
+          if (errMsg.toLowerCase().includes('invalid') || errMsg.toLowerCase().includes('credentials')) {
+            return { error: { message: 'Invalid email or password.' } };
+          }
           console.warn('[Supabase] Sign in network issue, falling back to backend & local store:', e);
         }
       }
@@ -243,6 +254,9 @@ export const supabase = {
           const token = apiData.token || `token-${user.id}`;
           setAuthState({ user, token });
           return { data: { user }, error: null };
+        } else {
+          const errData = await apiRes.json().catch(() => ({}));
+          return { error: { message: errData.detail || 'Invalid email or password.' } };
         }
       } catch (e) {
         console.warn('[Auth] Backend API login note:', e);

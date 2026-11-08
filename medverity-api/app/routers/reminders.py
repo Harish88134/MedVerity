@@ -174,9 +174,20 @@ async def add_reminder(reminder: ReminderCreate):
 
 
 @router.get("/sms-logs")
-async def get_sms_logs():
-    """Retrieve history of sent and simulated SMS notifications."""
+async def get_sms_logs(user_phone: Optional[str] = None):
+    """Retrieve history of sent and simulated SMS notifications, strictly scoped by user phone authorization."""
     logs = load_sms_logs()
+    if user_phone:
+        clean_user_phone = user_phone.strip().replace(" ", "").replace("-", "")
+        # Filter logs only meant for this user's phone number
+        logs = [
+            log for log in logs
+            if clean_user_phone in (log.get("to") or "").replace(" ", "").replace("-", "")
+            or (log.get("to") or "").replace(" ", "").replace("-", "") in clean_user_phone
+        ]
+    else:
+        # If no authorized phone query provided, return empty list to protect patient privacy
+        logs = []
     return {"logs": logs}
 
 

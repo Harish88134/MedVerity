@@ -173,6 +173,41 @@ body {
   }
 }
 
+/* Chatbot Modal Mobile Optimization */
+.chatbot-dialog {
+  width: 100%;
+  max-width: 560px;
+  height: 88vh;
+  max-height: 740px;
+  border-radius: var(--radius-2xl);
+}
+
+@media (max-width: 640px) {
+  .chatbot-overlay {
+    padding: 0 !important;
+    align-items: flex-end !important;
+  }
+  .chatbot-dialog {
+    width: 100% !important;
+    max-width: 100vw !important;
+    height: 94vh !important;
+    max-height: 94vh !important;
+    border-radius: 1.25rem 1.25rem 0 0 !important;
+    border-bottom: none !important;
+  }
+  .chatbot-messages {
+    padding: 0.875rem !important;
+  }
+  .chatbot-bubble {
+    max-width: 90% !important;
+    font-size: 0.875rem !important;
+  }
+  .chatbot-input-dock {
+    padding: 0.625rem 0.875rem !important;
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
 /* ── Layout Shell ─────────────────────────────────────────── */
 .app-layout {
   display: flex;
