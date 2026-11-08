@@ -42,12 +42,6 @@ export function AlarmProvider({ children }: { children: React.ReactNode }) {
   // Track the last minute we fired an alarm to avoid repeated firings in the same minute
   const lastFiredMinuteRef = useRef<string>('');
 
-  // When user switches or logs out, immediately dismiss any active ringing alarm
-  useEffect(() => {
-    dismissAlarm();
-    lastFiredMinuteRef.current = '';
-  }, [user?.id, dismissAlarm]);
-
   // Load preferences from localStorage on mount
   useEffect(() => {
     try {
@@ -116,6 +110,12 @@ export function AlarmProvider({ children }: { children: React.ReactNode }) {
     setIsRinging(false);
     setActiveAlarm(null);
   }, []);
+
+  // When user switches or logs out, immediately dismiss any active ringing alarm
+  useEffect(() => {
+    dismissAlarm();
+    lastFiredMinuteRef.current = '';
+  }, [user?.id, dismissAlarm]);
 
   const snoozeAlarm = useCallback((minutes: number = 5) => {
     stopAlarm();
