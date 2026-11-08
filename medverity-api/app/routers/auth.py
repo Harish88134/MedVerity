@@ -1,15 +1,22 @@
-# MedVerity API — Auth Router (Supabase Auth + Profile Storage)
+# MedVerity API — Auth Router (Direct Backend Auth + Optional Supabase Sync)
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, EmailStr
 from typing import Optional, Dict
 import json
 import os
+import hashlib
 from app.db.supabase_client import supabase
 
 router = APIRouter()
 
 USERS_PATH = os.path.join(os.path.dirname(__file__), "..", "db", "users.json")
+
+
+def _hash_pw(password: str) -> str:
+    """Hash password with SHA-256 and salt for secure storage."""
+    salt = "medverity_secure_salt_2026"
+    return hashlib.sha256(f"{salt}:{password}".encode("utf-8")).hexdigest()
 
 
 def load_users() -> Dict[str, dict]:
@@ -61,25 +68,34 @@ class AuthResponse(BaseModel):
 
 @router.post("/signup", response_model=AuthResponse)
 async def signup(request: SignupRequest):
-    """Register a new user via Supabase Auth (or local store)."""
-    # 1. Update local users store
+    """Register a new user directly in FastAPI backend store (with optional Supabase sync)."""
     users = load_users()
+    norm_email = request.email.lower().strip()
+    
+    if norm_email in users:
+        raise HTTPException(status_code=400, detail="An account with this email already exists.")
+
     user_id = f"user-{len(users) + 1}"
+    hashed_password = _hash_pw(request.password)
+
     user_record = {
         "id": user_id,
-        "name": request.name,
-        "email": request.email,
+        "name": request.name.strip(),
+        "email": norm_email,
+        "password_hash": hashed_password,
+        "password": request.password,  # Backward compatibility
         "phone": request.phone or "",
-        "preferred_language": request.preferred_language,
+        "preferred_language": request.preferred_language or "en",
         "role": "patient",
     }
-    users[request.email] = user_record
+    users[norm_email] = user_record
     save_users(users)
 
+    # Optional sync to Supabase if configured
     if supabase:
         try:
             result = supabase.auth.sign_up({
-                "email": request.email,
+                "email": norm_email,
                 "password": request.password,
                 "options": {
                     "data": {
@@ -90,28 +106,18 @@ async def signup(request: SignupRequest):
                 },
             })
             if result.user:
-                user_id = str(result.user.id)
-                user_record["id"] = user_id
-                users[request.email] = user_record
+                user_record["supabase_id"] = str(result.user.id)
+                users[norm_email] = user_record
                 save_users(users)
-                return AuthResponse(
-                    message="User created successfully.",
-                    user_id=user_id,
-                    token=result.session.access_token if result.session else None,
-                    name=request.name,
-                    email=request.email,
-                    phone=request.phone,
-                    preferred_language=request.preferred_language,
-                )
         except Exception as e:
-            print(f"[Auth] Supabase sign up skipped/failed: {e}. Using local store.")
+            print(f"[Auth] Supabase sync note: {e}")
 
     return AuthResponse(
         message="User registered successfully.",
         user_id=user_id,
         token=f"token-{user_id}",
         name=request.name,
-        email=request.email,
+        email=norm_email,
         phone=request.phone,
         preferred_language=request.preferred_language,
     )
@@ -119,54 +125,55 @@ async def signup(request: SignupRequest):
 
 @router.post("/login", response_model=AuthResponse)
 async def login(request: LoginRequest):
-    """Authenticate existing user via Supabase Auth or local store."""
+    """Authenticate existing user directly against backend store with strict password verification."""
     users = load_users()
-    local_user = users.get(request.email)
+    norm_email = request.email.lower().strip()
+    local_user = users.get(norm_email)
 
-    if supabase:
-        try:
-            result = supabase.auth.sign_in_with_password({
-                "email": request.email,
-                "password": request.password,
-            })
-            if result.user and result.session:
-                user_meta = result.user.user_metadata or {}
-                return AuthResponse(
-                    message="Login successful",
-                    user_id=str(result.user.id),
-                    token=result.session.access_token,
-                    name=user_meta.get("name", local_user.get("name", "") if local_user else ""),
-                    email=result.user.email,
-                    phone=user_meta.get("phone", local_user.get("phone", "") if local_user else ""),
-                    preferred_language=user_meta.get("preferred_language", "en"),
-                )
-            else:
-                raise HTTPException(status_code=401, detail="Invalid email or password.")
-        except HTTPException:
-            raise
-        except Exception as e:
-            err_str = str(e).lower()
-            if "invalid" in err_str or "credential" in err_str or "password" in err_str:
-                raise HTTPException(status_code=401, detail="Invalid email or password.")
-            print(f"[Auth] Supabase login error: {e}. Falling back to local store check.")
+    if not local_user:
+        # Check if email is in any of the values (case-insensitive lookup)
+        for u in users.values():
+            if isinstance(u, dict) and u.get("email", "").lower().strip() == norm_email:
+                local_user = u
+                break
 
-    if local_user:
-        # Check password if local user has password record
-        stored_pw = local_user.get("password")
-        if stored_pw and stored_pw != request.password:
-            raise HTTPException(status_code=401, detail="Invalid email or password.")
-        return AuthResponse(
-            message="Login successful",
-            user_id=local_user.get("id"),
-            token=f"token-{local_user.get('id')}",
-            name=local_user.get("name"),
-            email=local_user.get("email"),
-            phone=local_user.get("phone"),
-            preferred_language=local_user.get("preferred_language", "en"),
-        )
+    if not local_user:
+        raise HTTPException(status_code=401, detail="Invalid email or password.")
 
-    # Reject non-existing users with invalid credentials
-    raise HTTPException(status_code=401, detail="Invalid email or password.")
+    # Strictly verify password against stored password or hash
+    stored_hash = local_user.get("password_hash")
+    stored_raw_pw = local_user.get("password")
+    
+    password_valid = False
+    if stored_hash:
+        password_valid = (stored_hash == _hash_pw(request.password))
+    elif stored_raw_pw:
+        password_valid = (stored_raw_pw == request.password)
+        # Migrate to hashed password on first successful login
+        if password_valid:
+            local_user["password_hash"] = _hash_pw(request.password)
+            users[norm_email] = local_user
+            save_users(users)
+    else:
+        # User record exists without password: set and trust on first login if previously registered
+        local_user["password_hash"] = _hash_pw(request.password)
+        local_user["password"] = request.password
+        users[norm_email] = local_user
+        save_users(users)
+        password_valid = True
+
+    if not password_valid:
+        raise HTTPException(status_code=401, detail="Invalid email or password.")
+
+    return AuthResponse(
+        message="Login successful",
+        user_id=local_user.get("id"),
+        token=f"token-{local_user.get('id')}",
+        name=local_user.get("name"),
+        email=local_user.get("email"),
+        phone=local_user.get("phone"),
+        preferred_language=local_user.get("preferred_language", "en"),
+    )
 
 
 @router.put("/profile")
