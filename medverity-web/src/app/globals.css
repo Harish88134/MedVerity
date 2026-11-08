@@ -183,6 +183,7 @@ body {
 }
 
 .app-sidebar {
+  display: none;
   width: var(--spacing-sidebar);
   min-height: 100vh;
   position: fixed;
@@ -193,9 +194,14 @@ body {
   background: var(--color-surface);
   border-right: 1px solid var(--color-border-light);
   box-shadow: var(--shadow-sidebar);
-  display: flex;
   flex-direction: column;
   overflow-y: auto;
+}
+
+@media (min-width: 1024px) {
+  .app-sidebar {
+    display: flex !important;
+  }
 }
 
 .app-main {
@@ -204,18 +210,20 @@ body {
   width: 100%;
   max-width: 100vw;
   overflow-x: hidden;
+  margin-left: 0 !important;
 }
 
 /* Desktop: offset main content by sidebar width */
 @media (min-width: 1024px) {
   .app-main {
-    margin-left: var(--spacing-sidebar);
+    margin-left: var(--spacing-sidebar) !important;
   }
 }
 
 /* Mobile: pad bottom for bottom nav */
 @media (max-width: 1023px) {
   .app-main {
+    margin-left: 0 !important;
     padding-bottom: var(--spacing-bottomnav);
   }
 }
