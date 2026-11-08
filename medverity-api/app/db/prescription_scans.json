@@ -1,5 +1,43 @@
 [
   {
+    "prescription_id": "prx-feac5d90",
+    "id": "prx-feac5d90",
+    "scanned_at": "2026-11-08T18:06:24.247431",
+    "created_at": "2026-11-08T18:06:24.247431",
+    "total_medicines": 1,
+    "medicines": [
+      {
+        "medicine_name": "Levocetirizine Hydrochloride 10 mg",
+        "status": "warning",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          },
+          {
+            "type": "lifestyle",
+            "risk_level": "warning",
+            "description": "\ud83c\udf77 Severe Central Sedation & Reflex Impairment: Do not consume alcohol and avoid driving after taking antihistamines."
+          }
+        ],
+        "dosage": "As directed by the Physician",
+        "frequency": "As directed by the Physician",
+        "category": "Antihistamine",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 0,
+      "warning_count": 1,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
     "prescription_id": "prx-0061b5dc",
     "id": "prx-0061b5dc",
     "scanned_at": "2026-11-08T10:49:53.296019",
