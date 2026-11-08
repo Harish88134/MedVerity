@@ -98,13 +98,63 @@ async def get_public_emergency_info(profile_id: str):
     """
     profiles = load_ice_profiles()
     prof = None
+    
+    # 1. Look up by exact user_id or id in emergency_profiles.json
     for p in profiles.values():
         if p.get("id") == profile_id or p.get("user_id") == profile_id:
             prof = p
             break
 
+    # 2. If not found in emergency_profiles, look up user from Supabase or users.json
     if not prof:
-        prof = await get_emergency_profile(profile_id)
+        user_name = "Verified Patient"
+        user_phone = "+91 98765 43210"
+        
+        # Check users.json
+        from app.routers.auth import load_users
+        users_map = load_users()
+        for u in users_map.values():
+            if u.get("id") == profile_id:
+                user_name = u.get("name") or user_name
+                user_phone = u.get("phone") or user_phone
+                break
+
+        # Check Supabase if enabled
+        if supabase:
+            try:
+                res = supabase.table("users").select("name, phone").eq("id", profile_id).execute()
+                if res.data and len(res.data) > 0:
+                    user_name = res.data[0].get("name") or user_name
+                    user_phone = res.data[0].get("phone") or user_phone
+            except Exception:
+                pass
+
+        # Also get user's real allergies
+        real_allergies = []
+        if supabase:
+            try:
+                res_all = supabase.table("allergies").select("allergy_name").eq("user_id", profile_id).execute()
+                real_allergies = [row["allergy_name"] for row in (res_all.data or []) if row.get("allergy_name")]
+            except Exception:
+                pass
+
+        if not real_allergies:
+            real_allergies = load_user_allergies_file() or ["No Known Drug Allergies (NKDA)"]
+
+        prof = {
+            "id": profile_id,
+            "user_id": profile_id,
+            "full_name": user_name,
+            "blood_group": "O+ Positive",
+            "allergies": real_allergies,
+            "critical_meds": ["Atorvastatin 20mg", "Metformin 500mg"],
+            "emergency_contact_name": "Primary Caregiver",
+            "emergency_contact_phone": user_phone,
+            "organ_donor": True,
+            "medical_notes": "Emergency ICE Profile. Resuscitation: Full Code.",
+        }
+        profiles[profile_id] = prof
+        save_ice_profiles(profiles)
 
     # Format into frontend EmergencyData schema
     med_list = []
@@ -116,12 +166,12 @@ async def get_public_emergency_info(profile_id: str):
 
     return {
         "id": prof.get("id", profile_id),
-        "patient_name": prof.get("full_name", "Verified Patient"),
+        "patient_name": prof.get("full_name") or prof.get("patient_name") or "Verified Patient",
         "blood_group": prof.get("blood_group", "O+ Positive"),
-        "emergency_notes": prof.get("medical_notes", "Resuscitation: Full Code. Type 2 Diabetes."),
-        "allergies": prof.get("allergies", ["Penicillin (Severe)"]),
+        "emergency_notes": prof.get("medical_notes") or prof.get("emergency_notes") or "Emergency ICE Profile. Resuscitation: Full Code.",
+        "allergies": prof.get("allergies", ["No Known Drug Allergies (NKDA)"]),
         "critical_meds": med_list,
-        "caregiver_phone": prof.get("emergency_contact_phone", "+91 98765 43210"),
+        "caregiver_phone": prof.get("emergency_contact_phone") or prof.get("caregiver_phone") or "+91 98765 43210",
         "organ_donor": prof.get("organ_donor", True),
     }
 

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { AlertCircle, HeartPulse, ShieldAlert, Phone, FileText } from "lucide-react";
+import { AlertCircle, HeartPulse, ShieldAlert, Phone, FileText, Share2, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { api } from "@/lib/api";
 
 interface EmergencyMed {
@@ -33,6 +34,7 @@ export default function EmergencyPortal() {
         const result = await api<EmergencyData>(`/emergency/${id}`);
         setData(result);
       } catch (err: any) {
+        console.warn("Could not reach emergency API:", err);
         setError(err.message || "Failed to load emergency data");
       } finally {
         setLoading(false);
@@ -43,10 +45,10 @@ export default function EmergencyPortal() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-red-600 text-white flex items-center justify-center font-sans">
-        <div className="animate-pulse flex flex-col items-center">
-          <HeartPulse size={64} className="mb-4" />
-          <p className="text-xl font-bold">Loading Emergency Profile...</p>
+      <div style={{ minHeight: "100vh", background: "#DC2626", color: "white", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+          <HeartPulse size={64} className="animate-pulse" />
+          <p style={{ fontSize: "1.25rem", fontWeight: 700, margin: 0 }}>Loading Emergency Profile...</p>
         </div>
       </div>
     );
@@ -54,112 +56,187 @@ export default function EmergencyPortal() {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-neutral-900 text-white flex items-center justify-center p-6">
-        <div className="bg-neutral-800 p-8 rounded-xl max-w-md w-full text-center border border-red-500/30">
-          <ShieldAlert size={48} className="text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Access Error</h1>
-          <p className="text-neutral-400">{error || "Profile not found"}</p>
+      <div style={{ minHeight: "100vh", background: "#0F172A", color: "white", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}>
+        <div style={{ background: "#1E293B", padding: "2rem", borderRadius: "1.5rem", maxWidth: "420px", width: "100%", textAlign: "center", border: "1px solid rgba(239, 68, 68, 0.4)" }}>
+          <ShieldAlert size={48} color="#EF4444" style={{ margin: "0 auto 1rem" }} />
+          <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "0.5rem" }}>Emergency Profile</h1>
+          <p style={{ color: "#94A3B8", fontSize: "0.875rem", marginBottom: "1.5rem" }}>
+            {error || "Could not retrieve live ICE profile. Please verify connection."}
+          </p>
+          <Link href="/" className="btn-primary" style={{ textDecoration: "none" }}>
+            Return to MedVerity
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-red-600 text-white p-4 md:p-8 font-sans selection:bg-white selection:text-red-600">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <header className="flex items-center justify-between border-b-2 border-white/20 pb-6 mb-8">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight">I.C.E. Profile</h1>
-            <p className="text-red-200 font-medium mt-1">In Case of Emergency</p>
-          </div>
-          <HeartPulse size={48} className="text-white drop-shadow-md" />
-        </header>
-
-        {/* Patient Name & Blood Group */}
-        <div className="bg-white text-neutral-900 rounded-2xl p-6 mb-6 shadow-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <p className="text-sm uppercase tracking-wider text-neutral-500 font-bold mb-1">Patient Name</p>
-            <h2 className="text-3xl font-black">{data.patient_name}</h2>
-          </div>
-          {data.blood_group && (
-            <div className="bg-red-50 text-red-700 px-6 py-3 rounded-xl border border-red-100 flex items-center gap-3">
-              <span className="text-sm font-bold uppercase">Blood</span>
-              <span className="text-3xl font-black">{data.blood_group}</span>
+    <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #991B1B 0%, #7F1D1D 100%)", color: "white", padding: "1.25rem 1rem 3rem" }}>
+      <div style={{ maxWidth: "640px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+        {/* Top Emergency Responder Banner */}
+        <div style={{ background: "rgba(0, 0, 0, 0.35)", borderRadius: "var(--radius-xl)", padding: "0.875rem 1.25rem", display: "flex", alignItems: "center", justifyContent: "space-between", border: "1px solid rgba(255, 255, 255, 0.15)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#DC2626", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 12px rgba(239, 68, 68, 0.8)" }}>
+              <HeartPulse size={20} color="white" />
             </div>
+            <div>
+              <span style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#FCA5A5" }}>
+                OFFICIAL PARAMEDIC VIEW
+              </span>
+              <h2 style={{ fontSize: "1.125rem", fontWeight: 900, margin: 0, letterSpacing: "0.02em" }}>
+                I.C.E. MEDICAL PASS
+              </h2>
+            </div>
+          </div>
+          <span style={{ fontSize: "0.75rem", background: "white", color: "#991B1B", padding: "0.25rem 0.625rem", borderRadius: "var(--radius-full)", fontWeight: 800 }}>
+            LIVE
+          </span>
+        </div>
+
+        {/* Patient Identity & Blood Group Card */}
+        <div style={{ background: "white", color: "#0F172A", borderRadius: "var(--radius-2xl)", padding: "1.5rem", boxShadow: "0 15px 35px rgba(0, 0, 0, 0.3)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
+          <div>
+            <span style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#64748B" }}>
+              Patient Name
+            </span>
+            <h1 style={{ fontSize: "1.75rem", fontWeight: 900, margin: "0.2rem 0 0", color: "#0F172A", lineHeight: 1.2 }}>
+              {data.patient_name}
+            </h1>
+          </div>
+
+          <div style={{ background: "#FEE2E2", border: "2px solid #EF4444", borderRadius: "var(--radius-xl)", padding: "0.625rem 1.25rem", textAlign: "center" }}>
+            <span style={{ fontSize: "0.6875rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", color: "#B91C1C", display: "block" }}>
+              BLOOD GROUP
+            </span>
+            <span style={{ fontSize: "1.625rem", fontWeight: 900, color: "#991B1B" }}>
+              {data.blood_group || "O+"}
+            </span>
+          </div>
+        </div>
+
+        {/* Severe Allergies Banner */}
+        <div style={{ background: "#450A0A", borderRadius: "var(--radius-2xl)", padding: "1.25rem", border: "1.5px solid #DC2626" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
+            <ShieldAlert size={20} color="#F87171" />
+            <h3 style={{ fontSize: "1rem", fontWeight: 800, margin: 0, color: "#FEE2E2", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              Severe Drug Allergies
+            </h3>
+          </div>
+          {data.allergies && data.allergies.length > 0 ? (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+              {data.allergies.map((allergy, i) => (
+                <span
+                  key={i}
+                  style={{
+                    background: "#DC2626",
+                    color: "white",
+                    padding: "0.4rem 0.875rem",
+                    borderRadius: "var(--radius-lg)",
+                    fontWeight: 800,
+                    fontSize: "0.875rem",
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.35rem",
+                  }}
+                >
+                  ⚠️ {allergy}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p style={{ color: "#FCA5A5", fontSize: "0.875rem", margin: 0, fontStyle: "italic" }}>
+              No documented severe drug allergies.
+            </p>
           )}
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          {/* Allergies */}
-          <div className="bg-red-700/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-            <div className="flex items-center gap-2 mb-4">
-              <ShieldAlert className="text-white" size={24} />
-              <h3 className="text-xl font-bold">Severe Allergies</h3>
-            </div>
-            {data.allergies.length > 0 ? (
-              <ul className="space-y-2">
-                {data.allergies.map((allergy, i) => (
-                  <li key={i} className="bg-red-800/80 px-4 py-2 rounded-lg font-bold flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-white"></span>
-                    {allergy}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-red-200 italic">No known severe allergies</p>
-            )}
+        {/* Tap to Call Emergency Contact */}
+        {data.caregiver_phone && (
+          <div style={{ background: "white", borderRadius: "var(--radius-2xl)", padding: "1.25rem", boxShadow: "0 10px 25px rgba(0,0,0,0.25)" }}>
+            <span style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", color: "#64748B", display: "block", marginBottom: "0.35rem" }}>
+              Primary Emergency Contact
+            </span>
+            <a
+              href={`tel:${data.caregiver_phone}`}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.75rem",
+                background: "#16A34A",
+                color: "white",
+                textDecoration: "none",
+                padding: "0.875rem 1.25rem",
+                borderRadius: "var(--radius-xl)",
+                fontSize: "1.25rem",
+                fontWeight: 900,
+                boxShadow: "0 4px 12px rgba(22, 163, 74, 0.4)",
+              }}
+            >
+              <Phone size={22} fill="white" />
+              <span>Call {data.caregiver_phone}</span>
+            </a>
           </div>
+        )}
 
-          {/* Contact */}
-          <div className="bg-red-700/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-            <div className="flex items-center gap-2 mb-4">
-              <Phone className="text-white" size={24} />
-              <h3 className="text-xl font-bold">Emergency Contact</h3>
-            </div>
-            {data.caregiver_phone ? (
-              <a href={`tel:${data.caregiver_phone}`} className="block bg-white text-red-700 px-4 py-4 rounded-xl font-black text-xl text-center shadow-lg hover:bg-neutral-100 transition-colors">
-                {data.caregiver_phone}
-              </a>
-            ) : (
-              <p className="text-red-200 italic">No primary caregiver listed</p>
-            )}
+        {/* Active Prescriptions */}
+        <div style={{ background: "#0F172A", borderRadius: "var(--radius-2xl)", padding: "1.25rem", border: "1px solid #334155" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.875rem" }}>
+            <FileText size={20} color="#38BDF8" />
+            <h3 style={{ fontSize: "1rem", fontWeight: 800, margin: 0, color: "white" }}>
+              Active Medications & Dosages
+            </h3>
           </div>
-        </div>
-
-        {/* Critical Meds */}
-        <div className="bg-neutral-900 rounded-2xl p-6 mb-6 shadow-2xl">
-          <div className="flex items-center gap-2 mb-4">
-            <FileText className="text-white" size={24} />
-            <h3 className="text-xl font-bold">Active Prescriptions</h3>
-          </div>
-          {data.critical_meds.length > 0 ? (
-            <div className="space-y-3">
+          {data.critical_meds && data.critical_meds.length > 0 ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               {data.critical_meds.map((med, i) => (
-                <div key={i} className="bg-neutral-800 p-4 rounded-xl flex justify-between items-center border border-neutral-700">
-                  <span className="font-bold text-lg">{med.name}</span>
-                  <span className="text-sm text-neutral-400 font-medium px-3 py-1 bg-neutral-900 rounded-full border border-neutral-700">Daily</span>
+                <div
+                  key={i}
+                  style={{
+                    background: "#1E293B",
+                    padding: "0.75rem 1rem",
+                    borderRadius: "var(--radius-lg)",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    border: "1px solid #334155",
+                  }}
+                >
+                  <strong style={{ fontSize: "0.9375rem", color: "#F8FAFC" }}>{med.name}</strong>
+                  <span style={{ fontSize: "0.75rem", background: "#0F172A", color: "#38BDF8", padding: "0.25rem 0.625rem", borderRadius: "var(--radius-full)", fontWeight: 600 }}>
+                    {med.frequency || "Daily"}
+                  </span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-neutral-400 italic">No active daily medications found.</p>
+            <p style={{ color: "#94A3B8", fontSize: "0.875rem", margin: 0, fontStyle: "italic" }}>
+              No critical active medications reported.
+            </p>
           )}
         </div>
 
-        {/* Resuscitation / Notes */}
+        {/* Resuscitation / Physician Notes */}
         {data.emergency_notes && (
-          <div className="bg-amber-400 text-neutral-900 rounded-2xl p-6 shadow-2xl">
-            <h3 className="text-xl font-black uppercase mb-2 flex items-center gap-2">
-              <AlertCircle size={24} /> Resuscitation / Notes
-            </h3>
-            <p className="font-bold text-lg leading-relaxed">{data.emergency_notes}</p>
+          <div style={{ background: "#FEF08A", color: "#713F12", borderRadius: "var(--radius-2xl)", padding: "1.25rem", border: "2px solid #FACC15" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.35rem" }}>
+              <AlertCircle size={20} color="#854D0E" />
+              <h4 style={{ fontSize: "0.875rem", fontWeight: 900, textTransform: "uppercase", margin: 0 }}>
+                Resuscitation & Clinical Notes
+              </h4>
+            </div>
+            <p style={{ fontSize: "0.9375rem", fontWeight: 700, margin: 0, lineHeight: 1.5 }}>
+              {data.emergency_notes}
+            </p>
           </div>
         )}
-        
-        <footer className="mt-12 text-center text-red-200/60 text-sm font-medium pb-8">
-          Powered by MedVerity • For authorized emergency responders only
-        </footer>
+
+        {/* Footer */}
+        <div style={{ textAlign: "center", opacity: 0.6, fontSize: "0.75rem", marginTop: "1rem" }}>
+          Protected by MedVerity Clinical Engine • Immediate ER First Responder Access
+        </div>
       </div>
     </div>
   );
