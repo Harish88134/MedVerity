@@ -32,14 +32,14 @@ export default function NavigationShell({ children }: { children: React.ReactNod
         <Sidebar />
       </div>
 
-      {/* Mobile header — hidden on desktop */}
-      <div className="hidden-desktop">
-        <Header />
-      </div>
-
       {/* Main content */}
-      <main className="app-main" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
-        <div style={{ flex: 1 }}>
+      <main className="app-main" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative', width: '100%', minWidth: 0 }}>
+        {/* Mobile header — hidden on desktop */}
+        <div className="hidden-desktop" style={{ width: '100%' }}>
+          <Header />
+        </div>
+
+        <div style={{ flex: 1, width: '100%' }}>
             {children}
         </div>
 
