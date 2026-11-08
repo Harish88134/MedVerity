@@ -42,6 +42,12 @@ export function AlarmProvider({ children }: { children: React.ReactNode }) {
   // Track the last minute we fired an alarm to avoid repeated firings in the same minute
   const lastFiredMinuteRef = useRef<string>('');
 
+  // When user switches or logs out, immediately dismiss any active ringing alarm
+  useEffect(() => {
+    dismissAlarm();
+    lastFiredMinuteRef.current = '';
+  }, [user?.id, dismissAlarm]);
+
   // Load preferences from localStorage on mount
   useEffect(() => {
     try {
@@ -161,6 +167,11 @@ export function AlarmProvider({ children }: { children: React.ReactNode }) {
 
   // Background Clock Monitor: Checks every 10 seconds against upcoming reminders
   useEffect(() => {
+    // DO NOT monitor or ring alarms if user is not logged in
+    if (!user?.id) {
+      return;
+    }
+
     const checkSchedule = async () => {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
@@ -173,7 +184,7 @@ export function AlarmProvider({ children }: { children: React.ReactNode }) {
       }
 
       try {
-        const url = user?.id ? `${API_BASE}/reminders?user_id=${user.id}` : `${API_BASE}/reminders`;
+        const url = `${API_BASE}/reminders?user_id=${encodeURIComponent(user.id)}`;
         const res = await fetch(url);
         if (!res.ok) return;
         const schedule = await res.json();
@@ -184,7 +195,7 @@ export function AlarmProvider({ children }: { children: React.ReactNode }) {
           ...(schedule.night || []).map((r: any) => ({ ...r, timeOfDay: 'night' })),
         ];
 
-        // Find reminder scheduled for right now that is still pending
+        // Find reminder scheduled for right now that is still pending AND belongs to this user
         const matchingReminder = allReminders.find(
           r => r.time === currentTimeStr && r.status === 'pending'
         );

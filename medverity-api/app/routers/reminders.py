@@ -79,19 +79,32 @@ def _supabase_to_schedule(rows: list) -> dict:
 
 @router.get("")
 async def get_reminders(user_id: str = ""):
-    """Get user's daily reminders schedule."""
+    """Get user's daily reminders schedule strictly scoped by user_id."""
     if supabase and user_id:
         try:
             result = supabase.table("reminders") \
                 .select("*") \
                 .eq("user_id", user_id) \
                 .execute()
-            if result.data:
+            if result.data is not None:
                 return _supabase_to_schedule(result.data)
         except Exception as e:
             print(f"[Reminders] Supabase read note: {e}. Using local store.")
 
-    return load_reminders()
+    # Local file fallback with strict user_id filtering
+    data = load_reminders()
+    if not user_id:
+        # If no user_id is provided, do not leak any other account's reminders or alarms
+        return {"morning": [], "afternoon": [], "night": []}
+
+    scoped_schedule = {"morning": [], "afternoon": [], "night": []}
+    for tod in ["morning", "afternoon", "night"]:
+        for item in data.get(tod, []):
+            # Only include reminders belonging strictly to this user
+            if item.get("user_id") == user_id:
+                scoped_schedule[tod].append(item)
+
+    return scoped_schedule
 
 
 @router.post("")
@@ -153,6 +166,7 @@ async def add_reminder(reminder: ReminderCreate):
     data = load_reminders()
     new_rem = {
         "id": reminder_id,
+        "user_id": reminder.user_id or "",
         "medicine_name": reminder.medicine_name,
         "time": reminder.time,
         "instructions": reminder.instructions,
