@@ -27,13 +27,13 @@ export default function NavigationShell({ children }: { children: React.ReactNod
 
   return (
     <div className="app-layout">
-      {/* Desktop sidebar — hidden on mobile via CSS */}
-      <div className="hidden lg:block">
+      {/* Desktop sidebar — hidden on mobile */}
+      <div className="hidden-mobile">
         <Sidebar />
       </div>
 
-      {/* Mobile header — hidden on desktop via CSS */}
-      <div className="lg:hidden">
+      {/* Mobile header — hidden on desktop */}
+      <div className="hidden-desktop">
         <Header />
       </div>
 
@@ -109,8 +109,8 @@ export default function NavigationShell({ children }: { children: React.ReactNod
         </footer>
       </main>
 
-      {/* Mobile bottom nav — hidden on desktop via CSS */}
-      <div className="lg:hidden">
+      {/* Mobile bottom nav — hidden on desktop */}
+      <div className="hidden-desktop">
         <BottomNav />
       </div>
 

@@ -160,6 +160,19 @@ body {
   --color-warning-50: #422006;
   --color-warning-100: #78350f;
 }
+/* ── Mobile Responsive Helper Utilities ─────────────────── */
+@media (max-width: 1023px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hidden-desktop {
+    display: none !important;
+  }
+}
+
 /* ── Layout Shell ─────────────────────────────────────────── */
 .app-layout {
   display: flex;
