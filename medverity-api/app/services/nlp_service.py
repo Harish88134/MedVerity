@@ -5,20 +5,22 @@ using Gemini Flash Lite with multi-model fallback and intelligent keyword recove
 """
 import json
 import re
+import requests
+from typing import Optional
 import google.generativeai as genai
 from app.config import settings
 
 # Configure Gemini once at module load
 if settings.GEMINI_API_KEY:
-    genai.configure(api_key=settings.GEMINI_API_KEY)
+    try:
+        genai.configure(api_key=settings.GEMINI_API_KEY)
+    except Exception:
+        pass
 
 NLP_MODELS = [
-    "gemini-3.5-flash-lite",
-    "gemini-3.1-flash-lite",
-    "gemini-3.5-flash",
-    "gemini-3.6-flash",
+    "gemini-3.1-flash-lite-preview",
     "gemini-3-flash-preview",
-    "gemma-4-26b-a4b-it",
+    "gemini-2.5-flash",
 ]
 
 LANGUAGE_NAMES = {
@@ -59,71 +61,123 @@ OCR Text:
 
 PRESCRIPTION_EXTRACTION_PROMPT = """
 You are an expert clinical medical AI assistant specialized in reading doctor prescriptions and pharmacy dispensing records.
-Your job is to read handwritten or printed doctor prescriptions, Rx slips, medication tables, or doctor note text, and extract all prescribed medicines into a clean, structured table format.
+Your job is to read handwritten or printed doctor prescriptions, Rx slips, medication tables, or doctor note text.
 
-Pay close attention to table structures, columnar details, and medicine lines. Extract:
-1. medicine_name: Generic name or brand name along with strength/dosage form (e.g. "Amoxicillin 500mg", "Tab Pantoprazole 40mg", "Syp Paracetamol 120mg/5ml").
-2. dosage: Exact dose quantity (e.g., "1 Tablet", "1 Capsule", "5 ml", "1 Spoon").
-3. frequency: When and how often to take (e.g., "1-0-1", "0-0-1", "Twice daily after food", "Once daily before breakfast", "TDS", "BD", "OD", "SOS").
-4. duration: How many days/weeks or total quantity (e.g., "5 days", "10 days", "14 days", "1 month", "x 5d").
-5. category: Clinical medication category (e.g., "Antibiotic", "Pain Relief", "Antacid / PPI", "Antidiabetic", "Antihistamine", "Cardiovascular").
-6. uses: Brief 1-2 sentence patient-friendly explanation of why this medicine is prescribed.
+FIRST: Verify whether the uploaded text is genuinely an authentic medical prescription, doctor order, hospital Rx slip, or medicine packaging.
+If the text is NOT medical (for example: an academic similarity report, plagiarism check summary, invoice, generic code, receipts, random document, or unrelated text):
+Respond with a JSON object:
+{{
+  "is_prescription": false,
+  "error_message": "The uploaded image is not a recognized medical prescription or medication packaging. Please upload a clear photo of an authentic doctor prescription or medicine strip.",
+  "medicines": []
+}}
 
-Return a valid JSON array of objects, where each object has EXACTLY these keys:
-- medicine_name: string
-- dosage: string
-- frequency: string
-- duration: string
-- category: string
-- uses: string
+If the text IS an authentic prescription or medicine packaging:
+Extract all prescribed medicines into a clean, structured table format.
+Respond with a JSON object:
+{{
+  "is_prescription": true,
+  "error_message": null,
+  "medicines": [
+    {{
+      "medicine_name": "Generic or brand name + strength (e.g. Amoxicillin 500mg)",
+      "dosage": "Exact dose (e.g. 1 Capsule, 1 Tablet, 5ml)",
+      "frequency": "Frequency (e.g. Twice daily, 1-0-1, OD, BD, TDS)",
+      "duration": "Course duration (e.g. 5 days, 10 days, Ongoing)",
+      "category": "Medication category (e.g. Antibiotic, Antacid, Pain Relief)",
+      "uses": "1-2 sentence patient-friendly explanation of why it is prescribed"
+    }}
+  ]
+}}
 
-Even if the prescription is in table columns (such as: S.No | Medicine | Dosage | Timing | Duration), carefully reconstruct each row into an object.
-If the OCR text is illegible or has no recognizable medicines, return an empty array [].
-Respond ONLY with a valid JSON array.
+Respond ONLY with a valid JSON object.
 
 OCR Text:
 {ocr_text}
 """
 
-async def extract_prescription_medicines(text: str) -> list[dict]:
+def is_likely_medical_text(text: str) -> bool:
+    """Heuristic check to detect non-medical uploads (e.g. plagiarism reports, invoices, receipts)."""
+    if not text or len(text.strip()) < 4:
+        return False
+    lower = text.lower()
+    non_medical_patterns = [
+        r'similarity', r'turnitin', r'plagiarism', r'submission id', r'matches, including',
+        r'filtered from the report', r'overall similarity', r'repository', r'internet sources',
+        r'student papers', r'receipt', r'invoice total', r'subtotal', r'bank statement',
+        r'credit card', r'cvv', r'github\.com', r'def ', r'console\.log', r'<html'
+    ]
+    if any(re.search(pat, lower) for pat in non_medical_patterns):
+        return False
+
+    medical_patterns = [
+        r'\b(?:tab|cap|syrup|syp|inj|tablet|capsule|ointment|drop|drops|suspension|cream|gel|lotion|inhaler)\b',
+        r'\b\d+\s*(?:mg|mcg|ml|g|iu|%)\b',
+        r'\b(?:od|bd|tds|tid|qid|sos|hs|ac|pc|qds)\b',
+        r'\b(?:amoxicillin|augmentin|paracetamol|dolo|pantoprazole|metformin|azithromycin|cetirizine|ibuprofen|atorvastatin|telmisartan|crocin|aspirin|omeprazole|ciprofloxacin|levofloxacin|montelukast)\b',
+        r'\b(?:rx|dr\.|doctor|clinic|hospital|patient|dispense|prescription|dosage|take\s+\d+|daily)\b'
+    ]
+    matches = sum(1 for p in medical_patterns if re.search(p, lower))
+    return matches >= 1
+
+
+async def extract_prescription_medicines(text: str) -> tuple[bool, Optional[str], list[dict]]:
     """
-    Extract multiple medicines from a full prescription OCR text.
-    Uses Gemini Flash Lite with multi-model fallback.
+    Extract multiple medicines from prescription OCR text.
+    Returns: (is_valid_prescription: bool, error_message: Optional[str], medicines: list[dict])
     """
     cleaned_text = (text or "").strip()
     if not cleaned_text:
-        return []
+        return False, "No readable text detected in the document.", []
+
+    if not is_likely_medical_text(cleaned_text):
+        return False, "The uploaded document is not a recognized medical prescription. Please upload an authentic doctor prescription or medicine package.", []
 
     if settings.GEMINI_API_KEY:
         prompt = PRESCRIPTION_EXTRACTION_PROMPT.format(ocr_text=cleaned_text)
 
         for model_name in NLP_MODELS:
             try:
-                model = genai.GenerativeModel(model_name)
-                response = model.generate_content(
-                    prompt,
-                    generation_config=genai.types.GenerationConfig(
-                        temperature=0.1,
-                        max_output_tokens=2048,
-                        response_mime_type="application/json",
-                    ),
-                )
-                raw = response.text.strip()
-                raw = re.sub(r"^```(?:json)?\s*", "", raw)
-                raw = re.sub(r"\s*```$", "", raw)
-
-                data = json.loads(raw)
-                if isinstance(data, list):
-                    # sanitize each item
-                    for item in data:
-                        _validate_and_sanitize_prescription_item(item)
-                    print(f"[NLP] Successfully extracted {len(data)} medicines from prescription with {model_name}")
-                    return data
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={settings.GEMINI_API_KEY}"
+                payload = {
+                    "contents": [{"parts": [{"text": prompt}]}],
+                    "generationConfig": {
+                        "temperature": 0.1,
+                        "maxOutputTokens": 2048,
+                        "response_mime_type": "application/json",
+                    }
+                }
+                resp = requests.post(url, json=payload, timeout=12)
+                if resp.status_code == 200:
+                    cand = resp.json().get("candidates", [])
+                    if cand:
+                        raw = cand[0].get("content", {}).get("parts", [{}])[0].get("text", "").strip()
+                        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+                        raw = re.sub(r"\s*```$", "", raw)
+                        data = json.loads(raw)
+                        
+                        if isinstance(data, dict):
+                            is_rx = data.get("is_prescription", True)
+                            err_msg = data.get("error_message")
+                            meds = data.get("medicines", [])
+                            if not is_rx:
+                                return False, err_msg or "Not an authentic prescription.", []
+                            for item in meds:
+                                _validate_and_sanitize_prescription_item(item)
+                            print(f"[NLP] Successfully extracted {len(meds)} medicines from prescription with {model_name}")
+                            return True, None, meds
+                        elif isinstance(data, list):
+                            for item in data:
+                                _validate_and_sanitize_prescription_item(item)
+                            return True, None, data
             except Exception as e:
                 print(f"[NLP] Model {model_name} failed for prescription: {e}. Trying fallback model...")
 
-    print("[NLP] All Gemini models failed or key missing for prescription. Using smart fallback...")
-    return _smart_prescription_fallback(cleaned_text)
+    print("[NLP] Using smart prescription pattern extractor...")
+    meds = _smart_prescription_fallback(cleaned_text)
+    if meds:
+        return True, None, meds
+    return False, "No valid prescribed medications could be identified. Please ensure the prescription photo is clear.", []
 
 def _validate_and_sanitize_prescription_item(data: dict):
     """Ensure required schema fields exist and are well-formed for prescription items."""
@@ -156,23 +210,26 @@ async def extract_medicine_data(text: str, target_language: str = "en") -> dict:
 
         for model_name in NLP_MODELS:
             try:
-                model = genai.GenerativeModel(model_name)
-                response = model.generate_content(
-                    prompt,
-                    generation_config=genai.types.GenerationConfig(
-                        temperature=0.1,
-                        max_output_tokens=2048,
-                        response_mime_type="application/json",
-                    ),
-                )
-                raw = response.text.strip()
-                raw = re.sub(r"^```(?:json)?\s*", "", raw)
-                raw = re.sub(r"\s*```$", "", raw)
-
-                data = json.loads(raw)
-                _validate_and_sanitize(data)
-                print(f"[NLP] Successfully extracted data with {model_name}: {data.get('medicine_name')}")
-                return data
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={settings.GEMINI_API_KEY}"
+                payload = {
+                    "contents": [{"parts": [{"text": prompt}]}],
+                    "generationConfig": {
+                        "temperature": 0.1,
+                        "maxOutputTokens": 2048,
+                        "response_mime_type": "application/json",
+                    }
+                }
+                resp = requests.post(url, json=payload, timeout=12)
+                if resp.status_code == 200:
+                    cand = resp.json().get("candidates", [])
+                    if cand:
+                        raw = cand[0].get("content", {}).get("parts", [{}])[0].get("text", "").strip()
+                        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+                        raw = re.sub(r"\s*```$", "", raw)
+                        data = json.loads(raw)
+                        _validate_and_sanitize(data)
+                        print(f"[NLP] Successfully extracted data with {model_name}: {data.get('medicine_name')}")
+                        return data
             except Exception as e:
                 print(f"[NLP] Model {model_name} failed: {e}. Trying fallback model...")
 
@@ -356,7 +413,25 @@ def _smart_fallback(text: str, target_language: str = "en") -> dict:
         if any(k in text_lower for k in item["keys"]):
             res = dict(item)
             del res["keys"]
+            res["is_recognized_medicine"] = True
             return res
+
+    # Check if text is non-medical
+    if not is_likely_medical_text(text):
+        return {
+            "medicine_name": "Unrecognized Item",
+            "dosage": "N/A",
+            "frequency": "N/A",
+            "duration": "N/A",
+            "category": "Non-Medical Item",
+            "uses": "The scanned image does not appear to be recognized medication or medicine packaging.",
+            "how_to_take": "Do not consume unknown items. Please upload a clear photo of an authentic medicine label or prescription strip.",
+            "warnings": [
+                "Not identified as a recognized pharmaceutical product.",
+                "Verify packaging or consult your pharmacist directly.",
+            ],
+            "is_recognized_medicine": False,
+        }
 
     # Heuristic fallback: extract first clean non-metadata line as medicine name
     lines = [l.strip() for l in text.split("\n") if l.strip()]
@@ -384,6 +459,7 @@ def _smart_fallback(text: str, target_language: str = "en") -> dict:
             "Read the manufacturer leaflet inside the package.",
             "Consult a healthcare professional if you experience unexpected side effects.",
         ],
+        "is_recognized_medicine": True,
     }
 
 
@@ -437,30 +513,5 @@ def _smart_prescription_fallback(text: str) -> list[dict]:
                 })
 
     if not matches:
-        matches = [
-            {
-                "medicine_name": "Amoxicillin 500mg",
-                "dosage": "1 Capsule",
-                "frequency": "Three times daily",
-                "duration": "5 days",
-                "category": "Antibiotic",
-                "uses": "Treats bacterial infections of respiratory and throat tract.",
-            },
-            {
-                "medicine_name": "Paracetamol 650mg",
-                "dosage": "1 Tablet",
-                "frequency": "Twice daily after food",
-                "duration": "3 days",
-                "category": "Pain Relief",
-                "uses": "Relieves mild to moderate pain and reduces fever.",
-            },
-            {
-                "medicine_name": "Pantoprazole 40mg",
-                "dosage": "1 Tablet",
-                "frequency": "Once daily before breakfast",
-                "duration": "14 days",
-                "category": "Antacid",
-                "uses": "Prevents gastric acid irritation and heartburn.",
-            },
-        ]
+        return []
     return matches

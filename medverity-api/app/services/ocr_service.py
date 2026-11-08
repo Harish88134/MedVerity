@@ -1,24 +1,19 @@
 """
 MedVerity OCR Service — Gemini Multimodal (Fast & Free)
-Uses Gemini Flash Lite to extract raw text from medicine images with multi-model fallback
+Uses Gemini Flash Lite REST API with multi-model fallback
 and automatic image optimization for ultra-fast processing.
 """
 import io
+import base64
+import requests
 from PIL import Image
-import google.generativeai as genai
 from app.config import settings
-
-# Configure Gemini once at module load
-if settings.GEMINI_API_KEY:
-    genai.configure(api_key=settings.GEMINI_API_KEY)
 
 # Multi-tier multimodal models with fallback for high throughput and quota resiliency
 OCR_MODELS = [
-    "gemini-3.5-flash-lite",
-    "gemini-3.1-flash-lite",
-    "gemini-3.5-flash",
-    "gemini-3.6-flash",
+    "gemini-3.1-flash-lite-preview",
     "gemini-3-flash-preview",
+    "gemini-2.5-flash",
 ]
 
 
@@ -39,48 +34,56 @@ def _optimize_image(image_bytes: bytes) -> bytes:
 
 async def perform_ocr(image_bytes: bytes) -> dict:
     """
-    Extract raw text from the image using Gemini Flash Lite with multi-model fallback.
+    Extract raw text from the image using Gemini Multimodal REST API with fallback.
     Returns detected text and confidence score.
     """
     if not settings.GEMINI_API_KEY:
-        print("[OCR] No Gemini API key found. Using fallback.")
-        return _fallback_ocr()
+        print("[OCR] No Gemini API key found. Returning empty OCR.")
+        return {"text": "", "confidence": 0.0}
 
     optimized = _optimize_image(image_bytes)
-    image_part = {
-        "mime_type": "image/jpeg",
-        "data": optimized,
-    }
+    b64_data = base64.b64encode(optimized).decode("utf-8")
 
     prompt = (
-        "You are an expert OCR and medical text detection engine. "
-        "Carefully read and transcribe ALL readable text from this medicine strip, bottle, packaging, or prescription. "
-        "Include brand name, chemical/generic name, strength (e.g. 500mg, 10ml), dosage form (tablet, syrup), and instructions. "
-        "Return ONLY the extracted text exactly as it appears. Do not add conversational remarks, explanations, or markdown fences."
+        "You are an expert OCR engine. Transcribe ALL readable text from this image exactly as written. "
+        "Include all words, numbers, and symbols. Return ONLY the transcribed text without extra commentary or markdown."
     )
 
     last_error = None
     for model_name in OCR_MODELS:
         try:
-            model = genai.GenerativeModel(model_name)
-            response = model.generate_content([prompt, image_part])
-            text = response.text.strip()
-            if text:
-                print(f"[OCR] Successfully extracted text using {model_name} ({len(text)} chars)")
-                return {
-                    "text": text,
-                    "confidence": 0.95,
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={settings.GEMINI_API_KEY}"
+            payload = {
+                "contents": [{
+                    "parts": [
+                        {"text": prompt},
+                        {"inline_data": {"mime_type": "image/jpeg", "data": b64_data}}
+                    ]
+                }],
+                "generationConfig": {
+                    "temperature": 0.1,
+                    "maxOutputTokens": 2048
                 }
+            }
+            resp = requests.post(url, json=payload, timeout=12)
+            if resp.status_code == 200:
+                result_json = resp.json()
+                candidates = result_json.get("candidates", [])
+                if candidates:
+                    parts = candidates[0].get("content", {}).get("parts", [])
+                    if parts and "text" in parts[0]:
+                        text = parts[0]["text"].strip()
+                        print(f"[OCR] Successfully extracted text using {model_name} ({len(text)} chars)")
+                        return {
+                            "text": text,
+                            "confidence": 0.95,
+                        }
+            else:
+                last_error = f"HTTP {resp.status_code}: {resp.text[:100]}"
+                print(f"[OCR] Model {model_name} returned {last_error}. Trying next...")
         except Exception as e:
             last_error = e
             print(f"[OCR] Model {model_name} failed: {e}. Trying fallback model...")
 
-    print(f"[OCR] All Gemini models failed: {last_error}. Using fallback OCR.")
-    return _fallback_ocr()
-
-
-def _fallback_ocr() -> dict:
-    return {
-        "text": "Paracetamol 650 mg \nTake 1 tablet after meals",
-        "confidence": 0.95,
-    }
+    print(f"[OCR] All Gemini models failed: {last_error}.")
+    return {"text": "", "confidence": 0.0}

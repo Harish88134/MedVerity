@@ -65,6 +65,11 @@ function ScanResultContent() {
             translated_text: response.translated_text,
             alternatives: response.alternatives
          });
+
+         // Switch to low confidence / unverified mode if item is not recognized medicine
+         if (response.extraction?.is_recognized_medicine === false || response.extraction?.medicine_name === 'Unrecognized Item') {
+            setMode('low');
+         }
          
          // Phase 3: Check Allergies
          const savedAllergies = localStorage.getItem('medverity_allergies');

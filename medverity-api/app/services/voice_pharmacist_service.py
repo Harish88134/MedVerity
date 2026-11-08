@@ -14,12 +14,9 @@ from typing import List, Optional, Dict, Tuple
 
 # Multi-tier fallback models with active quota
 GEMINI_MODELS = [
-    "gemini-3.5-flash-lite",
-    "gemini-3.1-flash-lite",
-    "gemini-3.5-flash",
-    "gemini-3.6-flash",
+    "gemini-3.1-flash-lite-preview",
     "gemini-3-flash-preview",
-    "gemma-4-26b-a4b-it",
+    "gemini-2.5-flash",
 ]
 
 if settings.GEMINI_API_KEY:
@@ -463,48 +460,47 @@ async def answer_voice_question(
 
     # 2. Try Gemini with 12.0s timeout to allow full generation
     if settings.GEMINI_API_KEY:
+        import requests
         for model_name in GEMINI_MODELS:
             try:
-                model = genai.GenerativeModel(model_name)
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={settings.GEMINI_API_KEY}"
                 prompt = VOICE_QA_PROMPT.format(
                     medicine_name=clean_med,
                     question=clean_q,
                     target_language=f"{lang_name} ({lang})",
                 )
-                
-                response = await asyncio.wait_for(
-                    asyncio.to_thread(
-                        model.generate_content,
-                        prompt,
-                        generation_config=genai.types.GenerationConfig(
-                            temperature=0.2,
-                            max_output_tokens=600,
-                            response_mime_type="application/json",
-                        )
-                    ),
-                    timeout=12.0
-                )
-                raw_text = response.text.strip()
-                clean_text = re.sub(r"^```(?:json)?\s*", "", raw_text, flags=re.MULTILINE)
-                clean_text = re.sub(r"\s*```$", "", clean_text, flags=re.MULTILINE)
-
-                data = json.loads(clean_text)
-                if data.get("answer") and data.get("spoken_text"):
-                    return {
-                        "medicine_name": clean_med,
-                        "question": clean_q,
-                        "answer": data["answer"],
-                        "spoken_text": data["spoken_text"],
-                        "language": lang,
-                        "key_points": data.get("key_points", []),
-                        "safety_caution": data.get("safety_caution"),
-                        "follow_up_suggestions": data.get("follow_up_suggestions", []),
+                payload = {
+                    "contents": [{"parts": [{"text": prompt}]}],
+                    "generationConfig": {
+                        "temperature": 0.2,
+                        "maxOutputTokens": 600,
+                        "response_mime_type": "application/json",
                     }
-            except Exception as e:
-                err_str = str(e)
-                if "429" in err_str or "ResourceExhausted" in err_str or "quota" in err_str.lower():
-                    # Quota reached — immediately drop to instant local clinical reasoning
+                }
+                
+                resp = await asyncio.to_thread(requests.post, url, json=payload, timeout=12.0)
+                if resp.status_code == 200:
+                    cand = resp.json().get("candidates", [])
+                    if cand:
+                        raw_text = cand[0].get("content", {}).get("parts", [{}])[0].get("text", "").strip()
+                        clean_text = re.sub(r"^```(?:json)?\s*", "", raw_text, flags=re.MULTILINE)
+                        clean_text = re.sub(r"\s*```$", "", clean_text, flags=re.MULTILINE)
+                        data = json.loads(clean_text)
+                        if data.get("answer") and data.get("spoken_text"):
+                            return {
+                                "medicine_name": clean_med,
+                                "question": clean_q,
+                                "answer": data["answer"],
+                                "spoken_text": data["spoken_text"],
+                                "language": lang,
+                                "key_points": data.get("key_points", []),
+                                "safety_caution": data.get("safety_caution"),
+                                "follow_up_suggestions": data.get("follow_up_suggestions", []),
+                            }
+                elif resp.status_code == 429:
                     break
+            except Exception as e:
+                print(f"[VoicePharmacist] Model {model_name} failed: {e}. Trying fallback...")
                 continue
 
     # 3. Rich Clinical Knowledge Engine

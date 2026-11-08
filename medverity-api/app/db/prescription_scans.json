@@ -1,5 +1,361 @@
 [
   {
+    "prescription_id": "prx-0061b5dc",
+    "id": "prx-0061b5dc",
+    "scanned_at": "2026-11-08T10:49:53.296019",
+    "created_at": "2026-11-08T10:49:53.296019",
+    "total_medicines": 2,
+    "medicines": [
+      {
+        "medicine_name": "Augmentin 625mg",
+        "status": "danger",
+        "flags": [
+          {
+            "type": "allergy",
+            "risk_level": "danger",
+            "allergy": "Penicillin",
+            "active_ingredient": "Amoxicillin",
+            "title": "\ud83d\udea8 CRITICAL ALLERGY ALERT: Penicillin",
+            "description": "Prescribed medicine 'Augmentin 625mg' contains active ingredient 'Amoxicillin', which matches patient's recorded allergy to 'Penicillin'. Beta-lactam penicillin class allergy. High risk of anaphylaxis or severe hypersensitivity.",
+            "recommendation": "PAUSE DISPENSING IMMEDIATELY. Seek urgent verification from a qualified pharmacist or prescriber."
+          }
+        ],
+        "dosage": "1 tablet",
+        "frequency": "Twice daily",
+        "category": "Antibiotic",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Pantoprazole 40mg",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 tablet",
+        "frequency": "Once daily",
+        "category": "Antacid",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 1,
+      "warning_count": 0,
+      "danger_count": 1
+    },
+    "has_conflicts": true,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-0c385ccf",
+    "id": "prx-0c385ccf",
+    "scanned_at": "2026-11-08T10:12:19.521259",
+    "created_at": "2026-11-08T10:12:19.521259",
+    "total_medicines": 4,
+    "medicines": [
+      {
+        "medicine_name": "Submission ID trn:oid:::3618:156057266",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Unit",
+        "frequency": "As directed",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "9% Overall Similarity",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Unit",
+        "frequency": "As directed",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "The combined total of all matches, inclu",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Unit",
+        "frequency": "As directed",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Filtered from the Report",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Unit",
+        "frequency": "As directed",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 4,
+      "warning_count": 0,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-1e4e5b6e",
+    "id": "prx-1e4e5b6e",
+    "scanned_at": "2026-11-08T10:06:33.647124",
+    "created_at": "2026-11-08T10:06:33.647124",
+    "total_medicines": 4,
+    "medicines": [
+      {
+        "medicine_name": "Submission ID trn:oid:::3618:156057266",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Unit",
+        "frequency": "As directed",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "9% Overall Similarity",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Unit",
+        "frequency": "As directed",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "The combined total of all matches, inclu",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Unit",
+        "frequency": "As directed",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Filtered from the Report",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Unit",
+        "frequency": "As directed",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 4,
+      "warning_count": 0,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-f6f1f2c3",
+    "id": "prx-f6f1f2c3",
+    "scanned_at": "2026-11-08T10:06:05.753040",
+    "created_at": "2026-11-08T10:06:05.753040",
+    "total_medicines": 4,
+    "medicines": [
+      {
+        "medicine_name": "turnitin",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Unit",
+        "frequency": "As directed",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Submission ID trn:oid:::3618:156057266",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Unit",
+        "frequency": "As directed",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "9% Overall Similarity",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Unit",
+        "frequency": "As directed",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "The combined total of all matches, inclu",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Unit",
+        "frequency": "As directed",
+        "category": "Prescription Medicine",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 4,
+      "warning_count": 0,
+      "danger_count": 0
+    },
+    "has_conflicts": false,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
+    "prescription_id": "prx-61841c8c",
+    "id": "prx-61841c8c",
+    "scanned_at": "2026-11-08T10:03:45.274255",
+    "created_at": "2026-11-08T10:03:45.274255",
+    "total_medicines": 2,
+    "medicines": [
+      {
+        "medicine_name": "Amoxicillin 500mg",
+        "status": "danger",
+        "flags": [
+          {
+            "type": "allergy",
+            "risk_level": "danger",
+            "allergy": "Penicillin",
+            "active_ingredient": "Amoxicillin",
+            "title": "\ud83d\udea8 CRITICAL ALLERGY ALERT: Penicillin",
+            "description": "Prescribed medicine 'Amoxicillin 500mg' contains active ingredient 'Amoxicillin', which matches patient's recorded allergy to 'Penicillin'. Beta-lactam penicillin class allergy. High risk of anaphylaxis or severe hypersensitivity.",
+            "recommendation": "PAUSE DISPENSING IMMEDIATELY. Seek urgent verification from a qualified pharmacist or prescriber."
+          }
+        ],
+        "dosage": "1 Cap",
+        "frequency": "TDS",
+        "category": "Antibiotic",
+        "optimal_timing": "Take as directed by doctor"
+      },
+      {
+        "medicine_name": "Pantoprazole 40mg",
+        "status": "clear",
+        "flags": [
+          {
+            "type": "allergy_verified",
+            "risk_level": "clear",
+            "title": "No Recorded Allergy Conflict",
+            "description": "No match found with the allergies recorded in this profile.",
+            "recommendation": "No match found with the allergies recorded in this profile. Confirm patient has no other unrecorded drug allergies."
+          }
+        ],
+        "dosage": "1 Tab",
+        "frequency": "OD before breakfast",
+        "category": "Antacid / PPI",
+        "optimal_timing": "Take as directed by doctor"
+      }
+    ],
+    "summary": {
+      "clear_count": 1,
+      "warning_count": 0,
+      "danger_count": 1
+    },
+    "has_conflicts": true,
+    "disclaimer": "This is an automated safety pattern check against your recorded profile. It does not replace professional medical advice. Always confirm with your doctor or pharmacist."
+  },
+  {
     "prescription_id": "prx-86c07101",
     "id": "prx-86c07101",
     "scanned_at": "2026-11-06T21:24:52.318486",

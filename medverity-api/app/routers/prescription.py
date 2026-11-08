@@ -61,11 +61,10 @@ async def _process_verification(
 ) -> dict:
     # 1. Extract medicines via NLP or fallback
     extracted_meds = []
-    if ocr_text and ocr_text.strip():
-        extracted_meds = await extract_prescription_medicines(ocr_text)
+    is_valid_prescription = True
+    error_message = None
 
-    # Fallback heuristic
-    if not extracted_meds and manual_medicines:
+    if manual_medicines:
         extracted_meds = [
             {
                 "medicine_name": m,
@@ -77,25 +76,32 @@ async def _process_verification(
             }
             for m in manual_medicines
         ]
-    elif not extracted_meds and ocr_text:
-        lines = [l.strip() for l in ocr_text.split("\n") if len(l.strip()) > 3]
-        for line in lines[:5]:
-            if not any(skip in line.lower() for skip in ["dr.", "clinic", "hospital", "date", "rx", "patient", "age", "phone"]):
-                extracted_meds.append({
-                    "medicine_name": line[:40],
-                    "dosage": "1 Unit",
-                    "frequency": "As directed",
-                    "duration": "Course duration",
-                    "category": "Prescription Medicine",
-                    "uses": f"Clinical treatment matching {line[:30]}",
-                })
+    elif ocr_text and ocr_text.strip():
+        is_valid, err, meds = await extract_prescription_medicines(ocr_text)
+        is_valid_prescription = is_valid
+        error_message = err
+        extracted_meds = meds
 
-    if not extracted_meds:
-        # Default realistic clinical prescription
-        extracted_meds = [
-            {"medicine_name": "Amoxicillin 500mg", "dosage": "1 Capsule", "frequency": "3 times daily", "duration": "5 days", "category": "Antibiotic", "uses": "Treats bacterial infections"},
-            {"medicine_name": "Pantoprazole 40mg", "dosage": "1 Tablet", "frequency": "Once daily before breakfast", "duration": "14 days", "category": "Antacid", "uses": "Prevents gastric irritation"},
-        ]
+    if not is_valid_prescription or not extracted_meds:
+        presc_id = f"prx-{str(uuid.uuid4())[:8]}"
+        now_iso = datetime.now().isoformat()
+        return {
+            "prescription_id": presc_id,
+            "id": presc_id,
+            "scanned_at": now_iso,
+            "created_at": now_iso,
+            "is_valid_prescription": False,
+            "error": error_message or "No recognizable prescription or medicines detected in the uploaded image. Please upload a clear photo of an authentic doctor prescription or medicine strip.",
+            "total_medicines": 0,
+            "medicines": [],
+            "summary": {
+                "clear_count": 0,
+                "warning_count": 0,
+                "danger_count": 0,
+            },
+            "has_conflicts": False,
+            "disclaimer": "The uploaded image could not be verified as an authentic medical prescription."
+        }
 
     # 2. Gather patient profile & allergies securely
     from app.db.supabase_client import supabase

@@ -22,6 +22,9 @@ interface MedicineResult {
 interface PrescriptionResult {
     prescription_id: string;
     scanned_at: string;
+    is_valid_prescription?: boolean;
+    error?: string;
+    total_medicines?: number;
     medicines: MedicineResult[];
     summary: {
         clear_count: number;
@@ -99,14 +102,48 @@ function PrescriptionResultContent() {
         );
     }
 
-    if (error || !data) {
+    if (error || !data || data.is_valid_prescription === false || (data.medicines && data.medicines.length === 0)) {
+        const rejectionMsg = data?.error || error || "No recognizable medical prescription or medications found in the uploaded image.";
         return (
-            <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
-                <AlertTriangle size={48} color="var(--color-danger-500)" style={{ margin: '0 auto 1rem' }} />
-                <h3 style={{ fontWeight: 600, marginBottom: '0.5rem' }}>Oops!</h3>
-                <p style={{ color: 'var(--color-text-secondary)', marginBottom: '1.5rem' }}>{error}</p>
-                <Link href="/scan" className="btn-primary" style={{ display: 'inline-flex', width: 'auto' }}>
-                    Try Again
+            <div style={{ maxWidth: '640px', margin: '0 auto', padding: '2rem 1.25rem', textAlign: 'center', animation: 'var(--animate-fade-in)' }}>
+                <div style={{
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '50%',
+                    background: '#fef2f2',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 1.25rem'
+                }}>
+                    <AlertTriangle size={36} color="#dc2626" />
+                </div>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '0.5rem' }}>
+                    Invalid Prescription Document
+                </h2>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9375rem', lineHeight: 1.5, marginBottom: '1.5rem', maxWidth: '480px', margin: '0 auto 1.75rem' }}>
+                    {rejectionMsg}
+                </p>
+                <div style={{
+                    background: 'var(--color-bg-secondary, #f8fafc)',
+                    border: '1px solid var(--color-border-light, #e2e8f0)',
+                    borderRadius: 'var(--radius-lg, 12px)',
+                    padding: '1rem',
+                    textAlign: 'left',
+                    marginBottom: '1.75rem',
+                    fontSize: '0.875rem'
+                }}>
+                    <p style={{ fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '0.375rem' }}>
+                        📋 Tips for a successful scan:
+                    </p>
+                    <ul style={{ paddingLeft: '1.25rem', margin: 0, color: 'var(--color-text-secondary)' }}>
+                        <li>Upload a photo of an authentic doctor prescription slip or Rx note.</li>
+                        <li>Ensure medicine names, strengths (e.g., 500mg), and dosage are clearly visible.</li>
+                        <li>Avoid uploading non-medical files, invoices, or screenshots of computer screens.</li>
+                    </ul>
+                </div>
+                <Link href="/scan" className="btn-primary" style={{ display: 'inline-flex', width: 'auto', padding: '0.75rem 1.75rem' }}>
+                    Scan Authentic Prescription
                 </Link>
             </div>
         );
