@@ -226,7 +226,7 @@ export const supabase = {
         });
         const data = await res.json();
         if (!res.ok) {
-          return { error: { message: data.detail || 'Failed to send reset code.' } };
+          return { error: { message: data.detail || 'Failed to find account.' } };
         }
         return { data, error: null };
       } catch (err: any) {
@@ -234,7 +234,24 @@ export const supabase = {
       }
     },
 
-    async resetPassword(payload: { email: string; code: string; new_password: string }) {
+    async verifySecurityAnswer(payload: { email: string; security_answer: string; registered_phone?: string }) {
+      try {
+        const res = await fetch(`${API_BASE}/auth/verify-security-answer`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          return { error: { message: data.detail || 'Security verification failed.' } };
+        }
+        return { data, error: null };
+      } catch (err: any) {
+        return { error: { message: err.message || 'Network error.' } };
+      }
+    },
+
+    async resetPasswordWithSecurity(payload: { email: string; verification_token: string; new_password: string }) {
       try {
         const res = await fetch(`${API_BASE}/auth/reset-password`, {
           method: 'POST',
@@ -243,7 +260,7 @@ export const supabase = {
         });
         const data = await res.json();
         if (!res.ok) {
-          return { error: { message: data.detail || 'Failed to reset password.' } };
+          return { error: { message: data.detail || 'Failed to update password.' } };
         }
         return { data, error: null };
       } catch (err: any) {

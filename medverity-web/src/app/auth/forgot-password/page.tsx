@@ -4,25 +4,26 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { ShieldAlert, Mail, KeyRound, Lock, Eye, EyeOff, CheckCircle2, ArrowLeft, ArrowRight, RefreshCw } from 'lucide-react';
+import { ShieldAlert, Mail, Lock, Eye, EyeOff, CheckCircle2, ArrowLeft, ArrowRight, ShieldCheck, KeyRound, HelpCircle } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
-  const [step, setStep] = useState<'request' | 'verify'>('request');
+  const [step, setStep] = useState<'email' | 'security' | 'new_password'>('email');
   const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
+  const [securityQuestion, setSecurityQuestion] = useState('');
+  const [securityAnswer, setSecurityAnswer] = useState('');
+  const [verificationToken, setVerificationToken] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [devCode, setDevCode] = useState<string | null>(null);
 
-  const { forgotPassword, resetPassword } = useAuth();
+  const { forgotPassword, verifySecurityAnswer, resetPasswordWithSecurity } = useAuth();
   const router = useRouter();
 
-  // Step 1: Request 6-digit verification code
-  const handleRequestCode = async (e: React.FormEvent) => {
+  // Step 1: Look up account & security question
+  const handleFindAccount = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -31,13 +32,10 @@ export default function ForgotPasswordPage() {
       const cleanEmail = email.trim().toLowerCase();
       const res = await forgotPassword(cleanEmail);
       if (res.error) {
-        setError(res.error.message || 'Failed to send reset code.');
+        setError(res.error.message || 'No account found with this email.');
       } else {
-        setSuccess('Verification code sent to your email.');
-        if (res.data?.dev_code) {
-          setDevCode(res.data.dev_code);
-        }
-        setStep('verify');
+        setSecurityQuestion(res.data?.security_question || 'What is your registered phone number?');
+        setStep('security');
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred.');
@@ -46,7 +44,34 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  // Step 2: Verify code and set new password
+  // Step 2: Verify security answer
+  const handleVerifyAnswer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const cleanEmail = email.trim().toLowerCase();
+      const res = await verifySecurityAnswer({
+        email: cleanEmail,
+        security_answer: securityAnswer,
+        registered_phone: securityAnswer,
+      });
+
+      if (res.error) {
+        setError(res.error.message || 'Verification failed. Please check your answer.');
+      } else {
+        setVerificationToken(res.data?.verification_token || '');
+        setStep('new_password');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Step 3: Set new password
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -64,19 +89,20 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      const res = await resetPassword({
-        email,
-        code,
+      const cleanEmail = email.trim().toLowerCase();
+      const res = await resetPasswordWithSecurity({
+        email: cleanEmail,
+        verification_token: verificationToken,
         new_password: newPassword,
       });
 
       if (res.error) {
-        setError(res.error.message || 'Failed to reset password.');
+        setError(res.error.message || 'Failed to update password.');
       } else {
         setSuccess('Password updated successfully! Redirecting to login...');
         setTimeout(() => {
           router.push('/auth/login');
-        }, 1800);
+        }, 1500);
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred.');
@@ -133,7 +159,9 @@ export default function ForgotPasswordPage() {
             fontSize: '0.9375rem',
             marginTop: '0.25rem',
           }}>
-            {step === 'request' ? 'Reset your password' : 'Enter verification code'}
+            {step === 'email' && 'Find your account'}
+            {step === 'security' && 'Security Verification'}
+            {step === 'new_password' && 'Create new password'}
           </p>
         </div>
 
@@ -169,14 +197,15 @@ export default function ForgotPasswordPage() {
             </div>
           )}
 
-          {step === 'request' ? (
-            <form onSubmit={handleRequestCode} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {/* STEP 1: Enter Email */}
+          {step === 'email' && (
+            <form onSubmit={handleFindAccount} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', lineHeight: 1.5, margin: 0 }}>
-                Enter the email address registered with your account. We will send you a 6-digit verification code.
+                Enter the email address registered with your MedVerity account to begin password recovery.
               </p>
 
               <div>
-                <label htmlFor="reset-email" style={{
+                <label htmlFor="lookup-email" style={{
                   display: 'block',
                   fontSize: '0.8125rem',
                   fontWeight: 500,
@@ -194,7 +223,7 @@ export default function ForgotPasswordPage() {
                     color: 'var(--color-text-muted)',
                   }} />
                   <input
-                    id="reset-email"
+                    id="lookup-email"
                     type="email"
                     className="input-field"
                     style={{ paddingLeft: '2.75rem' }}
@@ -212,9 +241,9 @@ export default function ForgotPasswordPage() {
                 className="btn-primary"
                 style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
               >
-                {loading ? 'Sending Code...' : (
+                {loading ? 'Finding account...' : (
                   <>
-                    Send Verification Code
+                    Continue
                     <ArrowRight size={16} />
                   </>
                 )}
@@ -236,69 +265,104 @@ export default function ForgotPasswordPage() {
                 </Link>
               </div>
             </form>
-          ) : (
-            <form onSubmit={handleResetPassword} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', lineHeight: 1.5, margin: 0 }}>
-                We sent a 6-digit verification code to <strong>{email}</strong>.
-              </p>
+          )}
 
-              {devCode && (
-                <div style={{
-                  background: 'var(--color-teal-50)',
-                  border: '1px dashed var(--color-teal-300)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '0.5rem 0.75rem',
-                  fontSize: '0.8125rem',
-                  color: 'var(--color-teal-700)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
-                  <span>Your Code: <strong>{devCode}</strong></span>
-                  <button
-                    type="button"
-                    onClick={() => setCode(devCode)}
-                    style={{ background: 'none', border: 'none', color: 'var(--color-teal-600)', fontWeight: 600, cursor: 'pointer', fontSize: '0.75rem' }}
-                  >
-                    Auto-Fill
-                  </button>
-                </div>
-              )}
-
-              <div>
-                <label htmlFor="reset-code" style={{
-                  display: 'block',
-                  fontSize: '0.8125rem',
-                  fontWeight: 500,
-                  color: 'var(--color-text-secondary)',
-                  marginBottom: '0.375rem',
-                }}>
-                  6-Digit Verification Code
-                </label>
-                <div style={{ position: 'relative' }}>
-                  <KeyRound size={18} style={{
-                    position: 'absolute',
-                    left: '0.875rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'var(--color-text-muted)',
-                  }} />
-                  <input
-                    id="reset-code"
-                    type="text"
-                    maxLength={6}
-                    className="input-field"
-                    style={{ paddingLeft: '2.75rem', letterSpacing: '0.25em', fontWeight: 700 }}
-                    placeholder="123456"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value.trim())}
-                    required
-                  />
+          {/* STEP 2: Security Verification */}
+          {step === 'security' && (
+            <form onSubmit={handleVerifyAnswer} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{
+                background: 'var(--color-teal-50)',
+                border: '1px solid var(--color-teal-200)',
+                borderRadius: 'var(--radius-md)',
+                padding: '0.875rem',
+                display: 'flex',
+                gap: '0.625rem',
+                alignItems: 'flex-start',
+              }}>
+                <ShieldCheck size={20} color="var(--color-teal-600)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <div>
+                  <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--color-teal-800)', margin: '0 0 0.25rem' }}>
+                    Identity Verification
+                  </p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--color-teal-700)', margin: 0, lineHeight: 1.4 }}>
+                    To verify ownership of <strong>{email}</strong>, please answer your registered security prompt below.
+                  </p>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="new-password" style={{
+                <label htmlFor="sec-question" style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.375rem',
+                  fontSize: '0.8125rem',
+                  fontWeight: 600,
+                  color: 'var(--color-text-primary)',
+                  marginBottom: '0.375rem',
+                }}>
+                  <HelpCircle size={15} color="var(--color-teal-600)" />
+                  {securityQuestion}
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    id="sec-answer"
+                    type="text"
+                    className="input-field"
+                    placeholder="Enter your answer or registered phone"
+                    value={securityAnswer}
+                    onChange={(e) => setSecurityAnswer(e.target.value)}
+                    required
+                  />
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '0.25rem', marginBottom: 0 }}>
+                  Enter your registered phone number or the answer you provided during registration.
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn-primary"
+                style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+              >
+                {loading ? 'Verifying...' : (
+                  <>
+                    Verify Identity
+                    <ArrowRight size={16} />
+                  </>
+                )}
+              </button>
+
+              <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setStep('email')}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '0.8125rem',
+                    color: 'var(--color-text-muted)',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                  }}
+                >
+                  <ArrowLeft size={14} /> Try a different email
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* STEP 3: Set New Password */}
+          {step === 'new_password' && (
+            <form onSubmit={handleResetPassword} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', lineHeight: 1.5, margin: 0 }}>
+                Identity confirmed! Enter your new password below.
+              </p>
+
+              <div>
+                <label htmlFor="new-pw" style={{
                   display: 'block',
                   fontSize: '0.8125rem',
                   fontWeight: 500,
@@ -316,7 +380,7 @@ export default function ForgotPasswordPage() {
                     color: 'var(--color-text-muted)',
                   }} />
                   <input
-                    id="new-password"
+                    id="new-pw"
                     type={showPassword ? 'text' : 'password'}
                     className="input-field"
                     style={{ paddingLeft: '2.75rem', paddingRight: '2.75rem' }}
@@ -346,7 +410,7 @@ export default function ForgotPasswordPage() {
               </div>
 
               <div>
-                <label htmlFor="confirm-password" style={{
+                <label htmlFor="confirm-pw" style={{
                   display: 'block',
                   fontSize: '0.8125rem',
                   fontWeight: 500,
@@ -364,7 +428,7 @@ export default function ForgotPasswordPage() {
                     color: 'var(--color-text-muted)',
                   }} />
                   <input
-                    id="confirm-password"
+                    id="confirm-pw"
                     type={showPassword ? 'text' : 'password'}
                     className="input-field"
                     style={{ paddingLeft: '2.75rem' }}
@@ -382,37 +446,8 @@ export default function ForgotPasswordPage() {
                 className="btn-primary"
                 style={{ marginTop: '0.5rem' }}
               >
-                {loading ? 'Updating Password...' : 'Reset Password'}
+                {loading ? 'Updating Password...' : 'Save New Password'}
               </button>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-                <button
-                  type="button"
-                  onClick={() => setStep('request')}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'var(--color-teal-600)',
-                    fontSize: '0.8125rem',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.25rem',
-                  }}
-                >
-                  <RefreshCw size={13} /> Change email / Resend
-                </button>
-                <Link
-                  href="/auth/login"
-                  style={{
-                    fontSize: '0.8125rem',
-                    color: 'var(--color-text-muted)',
-                    textDecoration: 'none',
-                  }}
-                >
-                  Cancel
-                </Link>
-              </div>
             </form>
           )}
         </div>
@@ -420,4 +455,3 @@ export default function ForgotPasswordPage() {
     </div>
   );
 }
-

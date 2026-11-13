@@ -12,7 +12,8 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<{ error?: string }>;
   forgotPassword: (email: string) => Promise<{ data?: any; error?: { message?: string } | null }>;
-  resetPassword: (payload: { email: string; code: string; new_password: string }) => Promise<{ data?: any; error?: { message?: string } | null }>;
+  verifySecurityAnswer: (payload: { email: string; security_answer: string; registered_phone?: string }) => Promise<{ data?: any; error?: { message?: string } | null }>;
+  resetPasswordWithSecurity: (payload: { email: string; verification_token: string; new_password: string }) => Promise<{ data?: any; error?: { message?: string } | null }>;
   changePassword: (payload: { user_id: string; current_password: string; new_password: string }) => Promise<{ data?: any; error?: { message?: string } | null }>;
   hasCompletedOnboarding: boolean;
 }
@@ -109,8 +110,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return await supabase.auth.forgotPassword(email);
   }, []);
 
-  const resetPassword = useCallback(async (payload: { email: string; code: string; new_password: string }) => {
-    return await supabase.auth.resetPassword(payload);
+  const verifySecurityAnswer = useCallback(async (payload: { email: string; security_answer: string; registered_phone?: string }) => {
+    return await supabase.auth.verifySecurityAnswer(payload);
+  }, []);
+
+  const resetPasswordWithSecurity = useCallback(async (payload: { email: string; verification_token: string; new_password: string }) => {
+    return await supabase.auth.resetPasswordWithSecurity(payload);
   }, []);
 
   const changePassword = useCallback(async (payload: { user_id: string; current_password: string; new_password: string }) => {
@@ -118,7 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, updateProfile, forgotPassword, resetPassword, changePassword, hasCompletedOnboarding }}>
+    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, updateProfile, forgotPassword, verifySecurityAnswer, resetPasswordWithSecurity, changePassword, hasCompletedOnboarding }}>
       {children}
     </AuthContext.Provider>
   );

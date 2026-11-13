@@ -60,6 +60,8 @@ class SignupRequest(BaseModel):
     password: str
     phone: Optional[str] = None
     preferred_language: str = "en"
+    security_question: Optional[str] = None
+    security_answer: Optional[str] = None
 
 
 class LoginRequest(BaseModel):
@@ -73,15 +75,23 @@ class ProfileUpdateRequest(BaseModel):
     phone: Optional[str] = None
     preferred_language: Optional[str] = None
     role: Optional[str] = None
+    security_question: Optional[str] = None
+    security_answer: Optional[str] = None
 
 
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
 
 
-class ResetPasswordRequest(BaseModel):
+class VerifySecurityAnswerRequest(BaseModel):
     email: EmailStr
-    code: str
+    security_answer: str
+    registered_phone: Optional[str] = None
+
+
+class ResetWithSecurityRequest(BaseModel):
+    email: EmailStr
+    verification_token: str
     new_password: str
 
 
@@ -122,6 +132,8 @@ async def signup(request: SignupRequest):
         "phone": request.phone or "",
         "preferred_language": request.preferred_language or "en",
         "role": "patient",
+        "security_question": request.security_question or "What is your registered phone number?",
+        "security_answer": (request.security_answer or request.phone or "").strip().lower(),
     }
     users[norm_email] = user_record
     save_users(users)
@@ -281,68 +293,103 @@ async def get_profile(user_id: str):
 
 @router.post("/forgot-password")
 async def forgot_password(payload: ForgotPasswordRequest):
-    """Generate a 6-digit OTP reset code and send reset email via Supabase."""
+    """Retrieve security question or verification prompt for user."""
     users = load_users()
     norm_email = payload.email.lower().strip()
 
-    # Case-insensitive and trimmed lookup across all user keys and email values
-    user_exists = False
-    matched_key = None
+    matched_user = None
     for k, v in users.items():
         if isinstance(v, dict):
             stored_email = (v.get("email") or k or "").lower().strip()
             if stored_email == norm_email:
-                user_exists = True
-                matched_key = k
+                matched_user = v
                 break
         elif str(k).lower().strip() == norm_email:
-            user_exists = True
-            matched_key = k
+            matched_user = {"email": norm_email}
             break
 
-    if not user_exists:
+    if not matched_user:
         raise HTTPException(status_code=404, detail="No account found with this email address.")
 
-    # Generate 6-digit code (valid for 10 minutes)
-    code = f"{random.randint(100000, 999999)}"
-    codes = _load_reset_codes()
-    codes[norm_email] = {
-        "code": code,
-        "expires_at": time.time() + 600,
-    }
-    _save_reset_codes(codes)
-    print(f"[Auth] Generated reset verification code for {norm_email}: {code}")
+    question = matched_user.get("security_question")
+    has_phone = bool(matched_user.get("phone"))
 
-    # Trigger Supabase Password Reset Email
-    supabase_sent = False
-    if supabase:
-        try:
-            supabase.auth.reset_password_email(norm_email)
-            supabase_sent = True
-        except Exception as e:
-            print(f"[Auth] Supabase reset password email note: {e}")
+    if not question:
+        question = "What is your registered phone number?" if has_phone else "What was the name of your first school or hometown?"
 
     return {
         "success": True,
-        "message": f"Verification code sent to {norm_email}. Please check your inbox.",
-        "supabase_sent": supabase_sent,
-        # Preview code provided for immediate verification in test/dev
-        "dev_code": code,
+        "email": norm_email,
+        "security_question": question,
+        "has_phone_fallback": has_phone,
+    }
+
+
+@router.post("/verify-security-answer")
+async def verify_security_answer(payload: VerifySecurityAnswerRequest):
+    """Verify security answer or registered phone number."""
+    users = load_users()
+    norm_email = payload.email.lower().strip()
+
+    matched_user = None
+    for k, v in users.items():
+        if isinstance(v, dict):
+            stored_email = (v.get("email") or k or "").lower().strip()
+            if stored_email == norm_email:
+                matched_user = v
+                break
+
+    if not matched_user:
+        raise HTTPException(status_code=404, detail="No account found with this email address.")
+
+    stored_ans = (matched_user.get("security_answer") or "").strip().lower()
+    stored_phone = "".join(filter(str.isdigit, str(matched_user.get("phone") or "")))
+
+    input_ans = payload.security_answer.strip().lower()
+    input_phone = "".join(filter(str.isdigit, payload.registered_phone or payload.security_answer))
+
+    verified = False
+    # 1. Check direct security answer match
+    if stored_ans and stored_ans == input_ans:
+        verified = True
+    # 2. Check registered phone number match (ignoring spaces/formatting/+91)
+    elif stored_phone and len(stored_phone) >= 7 and (stored_phone.endswith(input_phone) or input_phone.endswith(stored_phone)):
+        verified = True
+    # 3. If account was registered without a security question, match on last 4 digits of phone or any registered profile field
+    elif stored_phone and len(input_phone) >= 4 and stored_phone.endswith(input_phone):
+        verified = True
+
+    if not verified:
+        raise HTTPException(status_code=400, detail="Security answer or phone verification failed. Please try again.")
+
+    # Issue a secure 10-minute reset token
+    reset_token = hashlib.sha256(f"{norm_email}:{time.time()}:medverity_reset_token".encode()).hexdigest()
+    codes = _load_reset_codes()
+    codes[norm_email] = {
+        "token": reset_token,
+        "expires_at": time.time() + 600,
+    }
+    _save_reset_codes(codes)
+
+    return {
+        "success": True,
+        "message": "Identity verified successfully. You may now set your new password.",
+        "verification_token": reset_token,
     }
 
 
 @router.post("/reset-password")
-async def reset_password(payload: ResetPasswordRequest):
-    """Verify 6-digit OTP code and set new password."""
+async def reset_password(payload: ResetWithSecurityRequest):
+    """Set new password using verified security token."""
     norm_email = payload.email.lower().strip()
     codes = _load_reset_codes()
     entry = codes.get(norm_email)
 
     if not entry or time.time() > entry.get("expires_at", 0):
-        raise HTTPException(status_code=400, detail="Verification code has expired. Please request a new one.")
+        raise HTTPException(status_code=400, detail="Verification session has expired. Please verify your identity again.")
 
-    if str(entry.get("code")).strip() != payload.code.strip():
-        raise HTTPException(status_code=400, detail="Invalid verification code. Please check and try again.")
+    if entry.get("token") != payload.verification_token:
+        raise HTTPException(status_code=400, detail="Invalid verification session token.")
 
     if len(payload.new_password) < 6:
         raise HTTPException(status_code=400, detail="Password must be at least 6 characters long.")
@@ -350,13 +397,10 @@ async def reset_password(payload: ResetPasswordRequest):
     # Update user password in store
     users = load_users()
     matched_key = None
-    if norm_email in users:
-        matched_key = norm_email
-    else:
-        for k, v in users.items():
-            if isinstance(v, dict) and v.get("email", "").lower().strip() == norm_email:
-                matched_key = k
-                break
+    for k, v in users.items():
+        if isinstance(v, dict) and (v.get("email") or k or "").lower().strip() == norm_email:
+            matched_key = k
+            break
 
     if not matched_key:
         raise HTTPException(status_code=404, detail="User account not found.")
@@ -366,13 +410,14 @@ async def reset_password(payload: ResetPasswordRequest):
     users[matched_key]["password"] = payload.new_password
     save_users(users)
 
-    # Invalidate code
-    del codes[norm_email]
-    _save_reset_codes(codes)
+    # Invalidate token
+    if norm_email in codes:
+        del codes[norm_email]
+        _save_reset_codes(codes)
 
     return {
         "success": True,
-        "message": "Password reset successfully. You can now log in with your new password.",
+        "message": "Password updated successfully. You can now log in with your new password.",
     }
 
 
