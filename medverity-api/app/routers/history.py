@@ -8,9 +8,29 @@ from app.db.supabase_client import supabase
 router = APIRouter()
 
 
+import os
+import json
+
+SCANS_PATH = os.path.join(os.path.dirname(__file__), "..", "db", "user_scans_history.json")
+
+
 @router.get("")
 async def get_history(user_id: str = ""):
     """Get scan history timeline for a user."""
+    # Check local user scans history first if available
+    if os.path.exists(SCANS_PATH):
+        try:
+            with open(SCANS_PATH, "r") as f:
+                saved_scans = json.load(f)
+                if user_id:
+                    matched = [s for s in saved_scans if s.get("user_id") == user_id]
+                    if matched:
+                        return {"history": matched}
+                elif saved_scans:
+                    return {"history": saved_scans}
+        except Exception:
+            pass
+
     if supabase and user_id:
         try:
             result_scans = supabase.table("scans") \

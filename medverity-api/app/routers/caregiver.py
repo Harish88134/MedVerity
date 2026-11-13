@@ -77,17 +77,52 @@ async def get_caregiver_dashboard(caregiver_id: str = ""):
         except Exception as e:
             print(f"[Caregiver] Supabase fetch failed: {e}. Returning mock data.")
 
+    # Local dynamic calculation for linked patient Hasmitha
+    try:
+        from app.routers.reminders import load_reminders
+        rems_data = load_reminders()
+        hasmitha_id = "user-hasmitha-patient"
+        all_rems = []
+        for tod in ("morning", "afternoon", "night"):
+            for r in rems_data.get(tod, []):
+                if r.get("user_id") == hasmitha_id:
+                    all_rems.append(r)
+
+        if all_rems:
+            taken = sum(1 for r in all_rems if r.get("status") == "taken")
+            total = len(all_rems)
+            adherence = int((taken / total) * 100) if total else 85
+            next_p = next((r for r in all_rems if r.get("status") == "pending"), None)
+            missed_p = [r for r in all_rems if r.get("status") == "missed"]
+
+            return {
+                "patient_name": "Hasmitha",
+                "adherence": adherence,
+                "next_dose": {
+                    "medicine": next_p["medicine_name"] if next_p else "Atorvastatin 20mg",
+                    "time": next_p["time"] if next_p else "09:30 PM",
+                    "instructions": next_p.get("instructions", "Optimal Chronotherapy timing before sleep.") if next_p else "Take after dinner",
+                },
+                "missed_doses": [
+                    {"medicine": m["medicine_name"], "time": m["time"]} for m in missed_p
+                ] if missed_p else [
+                    {"medicine": "Metformin 500mg", "time": "Yesterday, 08:30 AM (Catch-up Taken)"}
+                ],
+            }
+    except Exception as err:
+        print("[Caregiver] Local calculation note:", err)
+
     # Mock fallback
     return {
-        "patient_name": "Eleanor",
-        "adherence": 85,
+        "patient_name": "Hasmitha",
+        "adherence": 92,
         "next_dose": {
-            "medicine": "Thyroxine 50mcg",
-            "time": "08:00 AM",
-            "instructions": "Before breakfast",
+            "medicine": "Atorvastatin 20mg",
+            "time": "09:30 PM",
+            "instructions": "Optimal Chronotherapy timing before sleep.",
         },
         "missed_doses": [
-            {"medicine": "Calcium Sandoz", "time": "Yesterday, 08:00 PM"},
+            {"medicine": "Metformin 500mg", "time": "Yesterday, 08:30 AM (Catch-up Taken)"},
         ],
     }
 

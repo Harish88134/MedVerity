@@ -4,6 +4,9 @@
 !.env.example
 *.pem
 DEPLOYMENT.md
+MedVerity_Project_Review_Dossier.docx
+*.docx
+create_review_dossier.py
 
 # Dependencies
 node_modules/

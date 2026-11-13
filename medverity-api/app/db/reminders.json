@@ -9,6 +9,28 @@
       "timeOfDay": "morning",
       "channel": "app",
       "phone": ""
+    },
+    {
+      "id": "rem-has-1",
+      "medicine_name": "Metformin 500mg",
+      "time": "08:30",
+      "instructions": "Take with breakfast. Maintain hydration.",
+      "status": "taken",
+      "timeOfDay": "morning",
+      "channel": "app",
+      "user_id": "user-hasmitha-patient",
+      "phone": "+91 98765 43210"
+    },
+    {
+      "id": "rem-has-2",
+      "medicine_name": "Pantoprazole 40mg",
+      "time": "07:30",
+      "instructions": "Take 30 mins before morning breakfast.",
+      "status": "taken",
+      "timeOfDay": "morning",
+      "channel": "sms",
+      "user_id": "user-hasmitha-patient",
+      "phone": "+91 98765 43210"
     }
   ],
   "afternoon": [
@@ -21,6 +43,17 @@
       "timeOfDay": "afternoon",
       "channel": "app",
       "phone": ""
+    },
+    {
+      "id": "rem-has-3",
+      "medicine_name": "Thyroxine 50mcg",
+      "time": "13:00",
+      "instructions": "Take with lunch. Avoid dairy 2 hours.",
+      "status": "taken",
+      "timeOfDay": "afternoon",
+      "channel": "app",
+      "user_id": "user-hasmitha-patient",
+      "phone": "+91 98765 43210"
     }
   ],
   "night": [
@@ -33,6 +66,17 @@
       "timeOfDay": "night",
       "channel": "app",
       "phone": ""
+    },
+    {
+      "id": "rem-has-4",
+      "medicine_name": "Atorvastatin 20mg",
+      "time": "21:30",
+      "instructions": "Optimal Chronotherapy timing before sleep.",
+      "status": "pending",
+      "timeOfDay": "night",
+      "channel": "app",
+      "user_id": "user-hasmitha-patient",
+      "phone": "+91 98765 43210"
     }
   ]
 }

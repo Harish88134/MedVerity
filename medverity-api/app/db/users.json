@@ -35,5 +35,29 @@
     "phone": "",
     "preferred_language": "en",
     "role": "patient"
+  },
+  "test1@gmail.com": {
+    "id": "user-hasmitha-patient",
+    "name": "Hasmitha",
+    "email": "test1@gmail.com",
+    "password_hash": "91669e899cf7109439b0d5d08b55e9dc3d28a647477dba7382b9404f3b46a307",
+    "password": "test@123",
+    "phone": "+91 98765 43210",
+    "preferred_language": "en",
+    "role": "patient",
+    "security_question": "What is your registered phone number?",
+    "security_answer": "9876543210"
+  },
+  "test2@gmail.com": {
+    "id": "user-hari-caregiver",
+    "name": "Hari",
+    "email": "test2@gmail.com",
+    "password_hash": "91669e899cf7109439b0d5d08b55e9dc3d28a647477dba7382b9404f3b46a307",
+    "password": "test@123",
+    "phone": "+91 93918 43586",
+    "preferred_language": "en",
+    "role": "caregiver",
+    "security_question": "What is your registered phone number?",
+    "security_answer": "9391843586"
   }
 }

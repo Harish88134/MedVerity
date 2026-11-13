@@ -88,5 +88,26 @@
     "emergency_contact_phone": "+91 98765 43210",
     "organ_donor": true,
     "medical_notes": "Emergency ICE Profile. Resuscitation: Full Code."
+  },
+  "user-hasmitha-patient": {
+    "id": "med-ice-hasmitha",
+    "user_id": "user-hasmitha-patient",
+    "full_name": "Hasmitha",
+    "blood_group": "B+ Positive",
+    "allergies": [
+      "Penicillin (Severe Shock)",
+      "Sulfa Drugs",
+      "Aspirin"
+    ],
+    "critical_meds": [
+      "Metformin 500mg (Morning)",
+      "Atorvastatin 20mg (Bedtime)",
+      "Pantoprazole 40mg"
+    ],
+    "emergency_contact_name": "Hari (Caregiver)",
+    "emergency_contact_phone": "+91 93918 43586",
+    "organ_donor": true,
+    "medical_notes": "Type 2 Diabetes, Mild Asthma. Severe Penicillin anaphylaxis.",
+    "updated_at": "2026-11-13T23:59:46.173659"
   }
 }
