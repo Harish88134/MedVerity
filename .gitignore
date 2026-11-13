@@ -3,6 +3,7 @@
 .env*.local
 !.env.example
 *.pem
+DEPLOYMENT.md
 
 # Dependencies
 node_modules/
