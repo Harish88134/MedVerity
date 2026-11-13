@@ -11,9 +11,9 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<{ error?: string }>;
-  forgotPassword: (email: string) => Promise<{ data?: any; error?: { message?: string } }>;
-  resetPassword: (payload: { email: string; code: string; new_password: string }) => Promise<{ data?: any; error?: { message?: string } }>;
-  changePassword: (payload: { user_id: string; current_password: string; new_password: string }) => Promise<{ data?: any; error?: { message?: string } }>;
+  forgotPassword: (email: string) => Promise<{ data?: any; error?: { message?: string } | null }>;
+  resetPassword: (payload: { email: string; code: string; new_password: string }) => Promise<{ data?: any; error?: { message?: string } | null }>;
+  changePassword: (payload: { user_id: string; current_password: string; new_password: string }) => Promise<{ data?: any; error?: { message?: string } | null }>;
   hasCompletedOnboarding: boolean;
 }
 
