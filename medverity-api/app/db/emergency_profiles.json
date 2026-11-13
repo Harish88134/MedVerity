@@ -71,5 +71,22 @@
     "organ_donor": true,
     "medical_notes": "Type 2 Diabetes, Mild Hypertension. Resuscitation: Full Code.",
     "updated_at": "2026-11-06T21:24:48.691068"
+  },
+  "user-5": {
+    "id": "user-5",
+    "user_id": "user-5",
+    "full_name": "Hari",
+    "blood_group": "O+ Positive",
+    "allergies": [
+      "penicillin"
+    ],
+    "critical_meds": [
+      "Atorvastatin 20mg",
+      "Metformin 500mg"
+    ],
+    "emergency_contact_name": "Primary Caregiver",
+    "emergency_contact_phone": "+91 98765 43210",
+    "organ_donor": true,
+    "medical_notes": "Emergency ICE Profile. Resuscitation: Full Code."
   }
 }

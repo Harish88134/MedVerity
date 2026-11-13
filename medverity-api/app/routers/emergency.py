@@ -10,6 +10,7 @@ from datetime import datetime
 
 from app.routers.allergy import load_user_allergies_file
 from app.routers.reminders import load_reminders
+from app.db.supabase_client import supabase
 
 router = APIRouter()
 
