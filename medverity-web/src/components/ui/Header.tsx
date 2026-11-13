@@ -33,6 +33,7 @@ const MENU_ITEMS = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const { signOut } = useAuth();
   const pathname = usePathname();
 
@@ -102,30 +103,96 @@ export default function Header() {
         </Link>
 
         {/* Notification bell */}
-        <button
-          onClick={() => alert("Notifications coming soon!")}
-          aria-label="Notifications"
-          style={{
-            background: 'transparent',
-            border: 'none',
-            cursor: 'pointer',
-            padding: '0.375rem',
-            position: 'relative',
-            color: 'var(--color-text-primary)',
-          }}
-        >
-          <Bell size={22} />
-          <span style={{
-            position: 'absolute',
-            top: '4px',
-            right: '4px',
-            width: '8px',
-            height: '8px',
-            background: 'var(--color-teal-500)',
-            borderRadius: '50%',
-            border: '2px solid white',
-          }} />
-        </button>
+        <div style={{ position: 'relative' }}>
+          <button
+            onClick={() => setNotificationsOpen(!notificationsOpen)}
+            aria-label="Notifications"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '0.375rem',
+              position: 'relative',
+              color: 'var(--color-text-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Bell size={22} />
+          </button>
+
+          {/* Notifications Dropdown Modal */}
+          {notificationsOpen && (
+            <>
+              <div
+                onClick={() => setNotificationsOpen(false)}
+                style={{
+                  position: 'fixed',
+                  inset: 0,
+                  zIndex: 60,
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  right: 0,
+                  top: 'calc(100% + 8px)',
+                  width: '300px',
+                  maxWidth: '90vw',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-border-light)',
+                  borderRadius: 'var(--radius-lg)',
+                  boxShadow: 'var(--shadow-lg)',
+                  zIndex: 70,
+                  padding: '1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Bell size={18} color="var(--color-teal-600)" />
+                    <span style={{ fontWeight: 600, fontSize: '0.9375rem', color: 'var(--color-text-primary)' }}>
+                      Notifications
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setNotificationsOpen(false)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '2px',
+                      color: 'var(--color-text-muted)',
+                    }}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+
+                <div
+                  style={{
+                    padding: '2rem 1rem',
+                    textAlign: 'center',
+                    background: 'var(--color-surface-secondary)',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px dashed var(--color-border)',
+                  }}
+                >
+                  <Bell size={28} color="var(--color-text-muted)" style={{ margin: '0 auto 0.5rem', opacity: 0.6 }} />
+                  <p style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--color-text-primary)', margin: 0 }}>
+                    No notifications
+                  </p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '0.25rem', marginBottom: 0 }}>
+                    You&apos;re all caught up!
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </header>
 
       {/* Mobile slide-out menu overlay */}
