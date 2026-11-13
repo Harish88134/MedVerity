@@ -18,10 +18,9 @@ if settings.GEMINI_API_KEY:
         pass
 
 NLP_MODELS = [
-    "gemini-3.5-flash",
-    "gemini-3-flash-preview",
     "gemini-3.5-flash-lite",
-    "gemini-3.8-flash",
+    "gemini-3-flash-preview",
+    "gemini-3.5-flash",
 ]
 
 LANGUAGE_NAMES = {

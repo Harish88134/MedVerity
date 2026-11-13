@@ -49,7 +49,7 @@ async def translate_text(text: str, target_language: str) -> str:
     # Fallback to Gemini Flash Lite (Completely Free)
     if settings.GEMINI_API_KEY:
         try:
-            model = genai.GenerativeModel("gemini-flash-lite-latest")
+            model = genai.GenerativeModel("gemini-3.5-flash-lite")
             prompt = f"Translate the following medical phrase or medicine name to {target_language}. Return ONLY the direct translation without quotes, notes, or explanations:\n{text}"
             res = model.generate_content(prompt)
             translated = res.text.strip()

@@ -9,12 +9,11 @@ import requests
 from PIL import Image
 from app.config import settings
 
-# Multi-tier multimodal models with fallback for high throughput and quota resiliency
+# Multi-tier multimodal models: fast flash-lite first for sub-2s latency, followed by robust fallbacks
 OCR_MODELS = [
-    "gemini-3.5-flash",
-    "gemini-3-flash-preview",
     "gemini-3.5-flash-lite",
-    "gemini-3.8-flash",
+    "gemini-3-flash-preview",
+    "gemini-3.5-flash",
 ]
 
 
@@ -63,10 +62,10 @@ async def perform_ocr(image_bytes: bytes) -> dict:
                 }],
                 "generationConfig": {
                     "temperature": 0.1,
-                    "maxOutputTokens": 2048
+                    "maxOutputTokens": 1024
                 }
             }
-            resp = requests.post(url, json=payload, timeout=12)
+            resp = requests.post(url, json=payload, timeout=6)
             if resp.status_code == 200:
                 result_json = resp.json()
                 candidates = result_json.get("candidates", [])

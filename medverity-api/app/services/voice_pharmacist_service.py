@@ -12,12 +12,11 @@ from app.config import settings
 from app.services.nlp_service import LANGUAGE_NAMES
 from typing import List, Optional, Dict, Tuple
 
-# Multi-tier fallback models with active quota
+# Multi-tier fallback models: ultra-fast flash-lite first for instant conversational answers
 GEMINI_MODELS = [
-    "gemini-3.5-flash",
-    "gemini-3-flash-preview",
     "gemini-3.5-flash-lite",
-    "gemini-3.8-flash",
+    "gemini-3-flash-preview",
+    "gemini-3.5-flash",
 ]
 
 if settings.GEMINI_API_KEY:
@@ -479,7 +478,7 @@ async def answer_voice_question(
                     }
                 }
                 
-                resp = await asyncio.to_thread(requests.post, url, json=payload, timeout=12.0)
+                resp = await asyncio.to_thread(requests.post, url, json=payload, timeout=6.0)
                 if resp.status_code == 200:
                     cand = resp.json().get("candidates", [])
                     if cand:
