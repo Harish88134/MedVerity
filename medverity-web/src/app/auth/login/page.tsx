@@ -147,15 +147,26 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="login-password" style={{
-                display: 'block',
-                fontSize: '0.8125rem',
-                fontWeight: 500,
-                color: 'var(--color-text-secondary)',
-                marginBottom: '0.375rem',
-              }}>
-                Password
-              </label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.375rem' }}>
+                <label htmlFor="login-password" style={{
+                  fontSize: '0.8125rem',
+                  fontWeight: 500,
+                  color: 'var(--color-text-secondary)',
+                }}>
+                  Password
+                </label>
+                <Link
+                  href="/auth/forgot-password"
+                  style={{
+                    fontSize: '0.8125rem',
+                    color: 'var(--color-teal-600)',
+                    textDecoration: 'none',
+                    fontWeight: 500,
+                  }}
+                >
+                  Forgot password?
+                </Link>
+              </div>
               <div style={{ position: 'relative' }}>
                 <Lock size={18} style={{
                   position: 'absolute',

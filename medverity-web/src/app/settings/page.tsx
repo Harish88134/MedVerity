@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { User, Globe, Bell, Shield, Moon, HelpCircle, LogOut, ChevronRight, Phone, CheckCircle, Loader2, X, Volume2, VolumeX, Play, BellRing } from 'lucide-react';
+import { User, Globe, Bell, Shield, Moon, HelpCircle, LogOut, ChevronRight, Phone, CheckCircle, Loader2, X, Volume2, VolumeX, Play, BellRing, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { SUPPORTED_LANGUAGES } from '@/types';
@@ -25,6 +25,7 @@ const SETTINGS_SECTIONS = [
   {
     title: 'Privacy & Security',
     items: [
+      { icon: Lock, label: 'Change Password', desc: 'Update your account password' },
       { icon: Shield, label: 'Privacy', desc: 'Data security & storage' },
     ],
   },
@@ -43,11 +44,18 @@ const SETTINGS_SECTIONS = [
 ];
 
 export default function SettingsPage() {
-  const { user, signOut, updateProfile } = useAuth();
+  const { user, signOut, updateProfile, changePassword } = useAuth();
   const router = useRouter();
   const { soundEnabled, setSoundEnabled, selectedTone, setSelectedTone, previewTone, testAlarm } = useAlarm();
 
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [pwForm, setPwForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [pwError, setPwError] = useState('');
+  const [pwSuccess, setPwSuccess] = useState('');
+  const [pwSaving, setPwSaving] = useState(false);
+  const [showCurrentPw, setShowCurrentPw] = useState(false);
+  const [showNewPw, setShowNewPw] = useState(false);
   const [showAlarmModal, setShowAlarmModal] = useState(false);
   const [editForm, setEditForm] = useState({
     name: '',
@@ -98,6 +106,11 @@ export default function SettingsPage() {
       router.push('/onboarding');
     } else if (label === 'Edit Profile') {
       openEditModal();
+    } else if (label === 'Change Password') {
+      setPwForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setPwError('');
+      setPwSuccess('');
+      setShowPasswordModal(true);
     } else if (label === 'Reminder Settings') {
       router.push('/reminders');
     } else if (label === 'Alarm Sound & Ringing') {
@@ -509,6 +522,197 @@ export default function SettingsPage() {
                 Done
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Change Password Modal */}
+      {showPasswordModal && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 50,
+          padding: '1rem',
+        }}>
+          <div className="card" style={{
+            width: '100%',
+            maxWidth: '420px',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            animation: 'var(--animate-scale-in)',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Lock size={20} color="var(--color-teal-600)" />
+                <h3 style={{ fontSize: '1.125rem', fontWeight: 700, margin: 0 }}>Change Password</h3>
+              </div>
+              <button
+                onClick={() => setShowPasswordModal(false)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem' }}
+              >
+                <X size={20} color="var(--color-text-muted)" />
+              </button>
+            </div>
+
+            {pwError && (
+              <div style={{
+                background: 'var(--color-danger-50)',
+                color: 'var(--color-danger-700)',
+                padding: '0.75rem 1rem',
+                borderRadius: 'var(--radius-md)',
+                fontSize: '0.875rem',
+                marginBottom: '1rem',
+              }}>
+                {pwError}
+              </div>
+            )}
+
+            {pwSuccess && (
+              <div style={{
+                background: 'var(--color-success-50)',
+                color: 'var(--color-success-700)',
+                padding: '0.75rem 1rem',
+                borderRadius: 'var(--radius-md)',
+                fontSize: '0.875rem',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+              }}>
+                <CheckCircle size={16} />
+                {pwSuccess}
+              </div>
+            )}
+
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              setPwError('');
+              setPwSuccess('');
+
+              if (pwForm.newPassword !== pwForm.confirmPassword) {
+                setPwError('New passwords do not match.');
+                return;
+              }
+
+              if (pwForm.newPassword.length < 6) {
+                setPwError('New password must be at least 6 characters.');
+                return;
+              }
+
+              if (!user?.id) {
+                setPwError('User session expired. Please sign in again.');
+                return;
+              }
+
+              setPwSaving(true);
+              try {
+                const res = await changePassword({
+                  user_id: user.id,
+                  current_password: pwForm.currentPassword,
+                  new_password: pwForm.newPassword,
+                });
+
+                if (res.error) {
+                  setPwError(res.error.message || 'Failed to change password.');
+                } else {
+                  setPwSuccess('Password changed successfully!');
+                  setTimeout(() => {
+                    setShowPasswordModal(false);
+                    setPwForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                    setPwSuccess('');
+                  }, 1500);
+                }
+              } catch (err: any) {
+                setPwError(err.message || 'An error occurred.');
+              } finally {
+                setPwSaving(false);
+              }
+            }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: '0.375rem' }}>
+                  Current Password
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showCurrentPw ? 'text' : 'password'}
+                    className="input-field"
+                    style={{ paddingRight: '2.5rem' }}
+                    placeholder="Enter current password"
+                    value={pwForm.currentPassword}
+                    onChange={(e) => setPwForm({ ...pwForm, currentPassword: e.target.value })}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPw(!showCurrentPw)}
+                    style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)' }}
+                  >
+                    {showCurrentPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: '0.375rem' }}>
+                  New Password
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showNewPw ? 'text' : 'password'}
+                    className="input-field"
+                    style={{ paddingRight: '2.5rem' }}
+                    placeholder="At least 6 characters"
+                    value={pwForm.newPassword}
+                    onChange={(e) => setPwForm({ ...pwForm, newPassword: e.target.value })}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPw(!showNewPw)}
+                    style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)' }}
+                  >
+                    {showNewPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: '0.375rem' }}>
+                  Confirm New Password
+                </label>
+                <input
+                  type={showNewPw ? 'text' : 'password'}
+                  className="input-field"
+                  placeholder="Re-enter new password"
+                  value={pwForm.confirmPassword}
+                  onChange={(e) => setPwForm({ ...pwForm, confirmPassword: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordModal(false)}
+                  className="btn-outline"
+                  style={{ flex: 1, padding: '0.625rem' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={pwSaving}
+                  className="btn-primary"
+                  style={{ flex: 1, padding: '0.625rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem' }}
+                >
+                  {pwSaving ? <Loader2 size={16} className="animate-spin" /> : 'Save Password'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -11,6 +11,9 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<{ error?: string }>;
+  forgotPassword: (email: string) => Promise<{ data?: any; error?: { message?: string } }>;
+  resetPassword: (payload: { email: string; code: string; new_password: string }) => Promise<{ data?: any; error?: { message?: string } }>;
+  changePassword: (payload: { user_id: string; current_password: string; new_password: string }) => Promise<{ data?: any; error?: { message?: string } }>;
   hasCompletedOnboarding: boolean;
 }
 
@@ -102,8 +105,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error: res.error ? res.error.message : undefined };
   }, [user]);
 
+  const forgotPassword = useCallback(async (email: string) => {
+    return await supabase.auth.forgotPassword(email);
+  }, []);
+
+  const resetPassword = useCallback(async (payload: { email: string; code: string; new_password: string }) => {
+    return await supabase.auth.resetPassword(payload);
+  }, []);
+
+  const changePassword = useCallback(async (payload: { user_id: string; current_password: string; new_password: string }) => {
+    return await supabase.auth.changePassword(payload);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, updateProfile, hasCompletedOnboarding }}>
+    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, updateProfile, forgotPassword, resetPassword, changePassword, hasCompletedOnboarding }}>
       {children}
     </AuthContext.Provider>
   );

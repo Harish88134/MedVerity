@@ -216,6 +216,57 @@ export const supabase = {
 
       return { data: { user: updatedUser }, error: null };
     },
+
+    async forgotPassword(email: string) {
+      try {
+        const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.toLowerCase().trim() }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          return { error: { message: data.detail || 'Failed to send reset code.' } };
+        }
+        return { data, error: null };
+      } catch (err: any) {
+        return { error: { message: err.message || 'Network error.' } };
+      }
+    },
+
+    async resetPassword(payload: { email: string; code: string; new_password: string }) {
+      try {
+        const res = await fetch(`${API_BASE}/auth/reset-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          return { error: { message: data.detail || 'Failed to reset password.' } };
+        }
+        return { data, error: null };
+      } catch (err: any) {
+        return { error: { message: err.message || 'Network error.' } };
+      }
+    },
+
+    async changePassword(payload: { user_id: string; current_password: string; new_password: string }) {
+      try {
+        const res = await fetch(`${API_BASE}/auth/change-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          return { error: { message: data.detail || 'Failed to change password.' } };
+        }
+        return { data, error: null };
+      } catch (err: any) {
+        return { error: { message: err.message || 'Network error.' } };
+      }
+    },
   },
 };
 

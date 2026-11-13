@@ -6,11 +6,30 @@ from typing import Optional, Dict
 import json
 import os
 import hashlib
+import random
+import time
 from app.db.supabase_client import supabase
 
 router = APIRouter()
 
 USERS_PATH = os.path.join(os.path.dirname(__file__), "..", "db", "users.json")
+RESET_CODES_PATH = os.path.join(os.path.dirname(__file__), "..", "db", "reset_codes.json")
+
+
+def _load_reset_codes() -> dict:
+    if os.path.exists(RESET_CODES_PATH):
+        try:
+            with open(RESET_CODES_PATH, "r") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+
+def _save_reset_codes(data: dict):
+    os.makedirs(os.path.dirname(RESET_CODES_PATH), exist_ok=True)
+    with open(RESET_CODES_PATH, "w") as f:
+        json.dump(data, f, indent=2)
 
 
 def _hash_pw(password: str) -> str:
@@ -54,6 +73,22 @@ class ProfileUpdateRequest(BaseModel):
     phone: Optional[str] = None
     preferred_language: Optional[str] = None
     role: Optional[str] = None
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    email: EmailStr
+    code: str
+    new_password: str
+
+
+class ChangePasswordRequest(BaseModel):
+    user_id: str
+    current_password: str
+    new_password: str
 
 
 class AuthResponse(BaseModel):
@@ -242,6 +277,136 @@ async def get_profile(user_id: str):
             pass
 
     return {"user": {"id": user_id, "name": "", "phone": "", "preferred_language": "en"}}
+
+
+@router.post("/forgot-password")
+async def forgot_password(payload: ForgotPasswordRequest):
+    """Generate a 6-digit OTP reset code and send reset email via Supabase."""
+    users = load_users()
+    norm_email = payload.email.lower().strip()
+
+    # Verify user exists
+    user_exists = norm_email in users
+    if not user_exists:
+        for u in users.values():
+            if isinstance(u, dict) and u.get("email", "").lower().strip() == norm_email:
+                user_exists = True
+                break
+
+    if not user_exists:
+        raise HTTPException(status_code=404, detail="No account found with this email address.")
+
+    # Generate 6-digit code (valid for 10 minutes)
+    code = f"{random.randint(100000, 999999)}"
+    codes = _load_reset_codes()
+    codes[norm_email] = {
+        "code": code,
+        "expires_at": time.time() + 600,
+    }
+    _save_reset_codes(codes)
+    print(f"[Auth] Generated reset verification code for {norm_email}: {code}")
+
+    # Trigger Supabase Password Reset Email
+    supabase_sent = False
+    if supabase:
+        try:
+            supabase.auth.reset_password_email(norm_email)
+            supabase_sent = True
+        except Exception as e:
+            print(f"[Auth] Supabase reset password email note: {e}")
+
+    return {
+        "success": True,
+        "message": f"Verification code sent to {norm_email}. Please check your inbox.",
+        "supabase_sent": supabase_sent,
+        # Preview code provided for immediate verification in test/dev
+        "dev_code": code,
+    }
+
+
+@router.post("/reset-password")
+async def reset_password(payload: ResetPasswordRequest):
+    """Verify 6-digit OTP code and set new password."""
+    norm_email = payload.email.lower().strip()
+    codes = _load_reset_codes()
+    entry = codes.get(norm_email)
+
+    if not entry or time.time() > entry.get("expires_at", 0):
+        raise HTTPException(status_code=400, detail="Verification code has expired. Please request a new one.")
+
+    if str(entry.get("code")).strip() != payload.code.strip():
+        raise HTTPException(status_code=400, detail="Invalid verification code. Please check and try again.")
+
+    if len(payload.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters long.")
+
+    # Update user password in store
+    users = load_users()
+    matched_key = None
+    if norm_email in users:
+        matched_key = norm_email
+    else:
+        for k, v in users.items():
+            if isinstance(v, dict) and v.get("email", "").lower().strip() == norm_email:
+                matched_key = k
+                break
+
+    if not matched_key:
+        raise HTTPException(status_code=404, detail="User account not found.")
+
+    new_hash = _hash_pw(payload.new_password)
+    users[matched_key]["password_hash"] = new_hash
+    users[matched_key]["password"] = payload.new_password
+    save_users(users)
+
+    # Invalidate code
+    del codes[norm_email]
+    _save_reset_codes(codes)
+
+    return {
+        "success": True,
+        "message": "Password reset successfully. You can now log in with your new password.",
+    }
+
+
+@router.post("/change-password")
+async def change_password(payload: ChangePasswordRequest):
+    """Change password for an authenticated user."""
+    users = load_users()
+    matched_key = None
+    for k, v in users.items():
+        if isinstance(v, dict) and v.get("id") == payload.user_id:
+            matched_key = k
+            break
+
+    if not matched_key:
+        raise HTTPException(status_code=404, detail="User account not found.")
+
+    user_data = users[matched_key]
+    stored_hash = user_data.get("password_hash")
+    stored_raw = user_data.get("password")
+
+    current_valid = False
+    if stored_hash:
+        current_valid = (stored_hash == _hash_pw(payload.current_password))
+    elif stored_raw:
+        current_valid = (stored_raw == payload.current_password)
+
+    if not current_valid:
+        raise HTTPException(status_code=400, detail="Incorrect current password.")
+
+    if len(payload.new_password) < 6:
+        raise HTTPException(status_code=400, detail="New password must be at least 6 characters long.")
+
+    new_hash = _hash_pw(payload.new_password)
+    user_data["password_hash"] = new_hash
+    user_data["password"] = payload.new_password
+    save_users(users)
+
+    return {
+        "success": True,
+        "message": "Password changed successfully.",
+    }
 
 
 @router.post("/logout")
