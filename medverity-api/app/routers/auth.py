@@ -285,13 +285,20 @@ async def forgot_password(payload: ForgotPasswordRequest):
     users = load_users()
     norm_email = payload.email.lower().strip()
 
-    # Verify user exists
-    user_exists = norm_email in users
-    if not user_exists:
-        for u in users.values():
-            if isinstance(u, dict) and u.get("email", "").lower().strip() == norm_email:
+    # Case-insensitive and trimmed lookup across all user keys and email values
+    user_exists = False
+    matched_key = None
+    for k, v in users.items():
+        if isinstance(v, dict):
+            stored_email = (v.get("email") or k or "").lower().strip()
+            if stored_email == norm_email:
                 user_exists = True
+                matched_key = k
                 break
+        elif str(k).lower().strip() == norm_email:
+            user_exists = True
+            matched_key = k
+            break
 
     if not user_exists:
         raise HTTPException(status_code=404, detail="No account found with this email address.")

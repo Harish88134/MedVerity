@@ -28,7 +28,8 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      const res = await forgotPassword(email);
+      const cleanEmail = email.trim().toLowerCase();
+      const res = await forgotPassword(cleanEmail);
       if (res.error) {
         setError(res.error.message || 'Failed to send reset code.');
       } else {
@@ -419,3 +420,4 @@ export default function ForgotPasswordPage() {
     </div>
   );
 }
+
